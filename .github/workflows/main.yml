@@ -32,6 +32,7 @@ jobs:
           CF_DOMAIN: ${{ secrets.CF_DOMAIN }} # CF-Workers反代域名，`DIRECT`直连
           REPO_NAME: ${{ github.event.repository.name }}
           BASE_PATH: ${{ secrets.BASE_PATH }} # 页面Base-path，默认"/{repo_name}"如"/pikpak"
+          NO_BASE_PATH: ${{ secrets.NO_BASE_PATH}}
           INVITE_CODE: ${{ secrets.INVITE_CODE }} # APK邀请码
           CF_INVITE: ${{ secrets.CF_INVITE }} # CF-Workers邀请域名
           CNAME_DOMAIN: ${{ secrets.CNAME_DOMAIN }} # CNAME域名
@@ -41,6 +42,7 @@ jobs:
             sed -i "/\[/,/]/cexport const proxy = ['https://$CF_DOMAIN']" src/config/index.ts;
           }
           [ $BASE_PATH ] || BASE_PATH="/${REPO_NAME}"
+          [ $NO_BASE_PATH ] && BASE_PATH=""
           [ "$BASE_PATH" != "/pikpak" ] && sed -i "s|/pikpak|$BASE_PATH|g" vite.config.ts
           [ $INVITE_CODE ] && sed -i "s|apk/url/225815|apk/url/$INVITE_CODE|g" src/views/login.vue
           [ $CF_INVITE ] && sed -i "s/invite.z7.workers.dev/$CF_INVITE/g" src/views/register.vue src/views/sms.vue src/views/testtest.vue
