@@ -52,11 +52,11 @@ const routes: RouteRecordRaw[] = [
 //       }
     ]
   },
-  {
-    path: '/t/:id?',
-    name: 'test',
-    component: () => import('../views/test.vue')
-  },
+  // {
+  //   path: '/t/:id?',
+  //   name: 'test',
+  //   component: () => import('../views/test.vue')
+  // },
   {
     path: '/s/:id/:password?',
     name: 'shareInfo',
@@ -77,11 +77,11 @@ const routes: RouteRecordRaw[] = [
     name: 'register',
     component: () => import('../views/register.vue'),
   },
-  {
-    path: '/testtest',
-    name: 'testtest',
-    component: () => import('../views/testtest.vue'),
-  },
+  // {
+  //   path: '/testtest',
+  //   name: 'testtest',
+  //   component: () => import('../views/testtest.vue'),
+  // },
 ]
 
 const router = createRouter({

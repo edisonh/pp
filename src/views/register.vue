@@ -210,7 +210,7 @@ const register = (e:Event) => {
               })
                 .then((res:any) => {
                   if(invite.value) {
-                    vipInvite(res.data)
+                    //vipInvite(res.data)
                   }
                   window.localStorage.setItem('pikpakLogin', JSON.stringify(res.data))
                   window.localStorage.removeItem('pikpakLoginData')

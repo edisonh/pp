@@ -187,7 +187,7 @@ const register = (e:Event) => {
             http.post(url, data)
               .then((res:any) => {
                 if(invite.value && !isUser.value) {
-                  vipInvite(res.data)
+                  //vipInvite(res.data)
                 }
                 window.localStorage.setItem('pikpakLogin', JSON.stringify(res.data))
                 window.localStorage.removeItem('pikpakLoginData')
