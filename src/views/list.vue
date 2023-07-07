@@ -792,7 +792,7 @@ import axios from 'axios';
 
     const sendDownloadMsg = (items:any) => {
       const extensionId = "chrome_extension_id"; // 插件ID
-      chrome.runtime.sendMessage(extensionId, {msg: "pikpak_batch_download", items});
+      chrome.runtime.sendMessage(extensionId, {msg: "pikpak_batch_download", items})
     }
 
     if (!nRef.value || !nRef.value.content) {
