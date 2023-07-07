@@ -799,8 +799,10 @@ import axios from 'axios';
       nRef.value = notification.create({
         title: '批量下载文件',
         closable: false,
-        content: '正在获取全部文件列表...'
+        content: '正在获取文件列表...'
       })
+    } else {
+      nRef.value.content = '正在获取文件列表...'
     }
     const selectedFiles = await getSelectedFiles()
     checkedRowKeys.value = []
