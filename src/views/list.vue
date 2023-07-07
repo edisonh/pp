@@ -67,6 +67,16 @@
             推送到Aria2
           </n-tooltip>
         </div>
+        <div class="toolbar-item" @click="downloadAll">
+          <n-tooltip>
+            <template #trigger>
+              <n-icon>
+                <icon-download></icon-download>
+              </n-icon>
+            </template>
+            批量下载
+          </n-tooltip>
+        </div>
         <div class="toolbar-item" @click="copyAll">
           <n-tooltip>
             <template #trigger>
@@ -242,7 +252,7 @@ import { h, computed, onMounted, watch, nextTick } from '@vue/runtime-core'
 import http, { notionHttp } from '../utils/axios'
 import { useRoute, useRouter } from 'vue-router'
 import { DataTableColumns, NDataTable, NTime, NEllipsis, NModal, NCard, NInput, NBreadcrumb, NBreadcrumbItem, NIcon, useThemeVars, NButton, NTooltip, NSpace, NScrollbar, NSpin, NDropdown, useDialog, NAlert, useNotification, NotificationReactive, NSelect, NForm, NFormItem, NTag, NText, NInputGroup } from 'naive-ui'
-import { CirclePlus, CircleX, Dots, Share, Copy as IconCopy, SwitchHorizontal, LetterA, ZoomQuestion } from '@vicons/tabler'
+import { CirclePlus, CircleX, Dots, Share, Copy as IconCopy, SwitchHorizontal, LetterA, ZoomQuestion, IconDownload } from '@vicons/tabler'
 import { byteConvert } from '../utils'
 import PlyrVue from '../components/Plyr.vue'
 import TaskVue from '../components/Task.vue'
@@ -756,6 +766,49 @@ import axios from 'axios';
     }
     nRef.value.content = '共获取到' + downFileList.value.length + '个文件'
   }
+
+
+  const downloadAll = async () => {
+
+    const getFileInfo = async (id:string) => {
+      const res:any = await http.get('https://api-drive.mypikpak.com/drive/v1/files/' + id, {
+        params: {
+          _magic: '2021',
+          thumbnail_size: 'SIZE_LARGE'
+        }
+      })
+      return res
+    }
+
+    const getSelectedFiles = async () => {
+      const selectedFileIds = JSON.parse(JSON.stringify(checkedRowKeys.value))
+      const selectedFiles = []
+      for (let id in selectedFileIds) {
+        const res:any = await getFileInfo(id)
+        selectedFiles.push({url: res.data.web_content_link, filename: res.data.name})
+      }
+      return selectedFiles
+    }
+
+    const sendDownloadMsg = (items:any) => {
+      const extensionId = "chrome_extension_id"; // 插件ID
+      chrome.runtime.sendMessage(extensionId, {msg: "pikpak_batch_download", items});
+    }
+
+    if (!nRef.value || !nRef.value.content) {
+      nRef.value = notification.create({
+        title: '批量下载文件',
+        closable: false,
+        content: '正在获取全部文件列表...'
+      })
+    }
+    const selectedFiles = await getSelectedFiles()
+    checkedRowKeys.value = []
+    nRef.value.content = '共获取到' + selectedFiles.length + '个文件'
+    sendDownloadMsg(selectedFiles)
+  }
+
+
   const aria2All = async () => {
     if(allLoding.value) {
       return false

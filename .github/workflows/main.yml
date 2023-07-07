@@ -36,6 +36,7 @@ jobs:
           INVITE_CODE: ${{ secrets.INVITE_CODE }} # APK邀请码
           CF_INVITE: ${{ secrets.CF_INVITE }} # CF-Workers邀请域名
           CNAME_DOMAIN: ${{ secrets.CNAME_DOMAIN }} # CNAME域名
+          EXTENSION_ID: ${{ secrets.EXTENSION_ID }} # EXTENSION_ID
         run: |
           [ $CF_DOMAIN ] && {
             [ "$CF_DOMAIN" == "DIRECT" ] && sed -i "/\[/,/]/cexport const proxy = []" src/config/index.ts || \
@@ -47,6 +48,7 @@ jobs:
           [ $INVITE_CODE ] && sed -i "s|apk/url/225815|apk/url/$INVITE_CODE|g" src/views/login.vue
           [ $CF_INVITE ] && sed -i "s/invite.z7.workers.dev/$CF_INVITE/g" src/views/register.vue src/views/sms.vue src/views/testtest.vue
           [ $CNAME_DOMAIN ] && echo "$CNAME_DOMAIN" > public/CNAME
+          [ $EXTENSION_ID ] && sed -i "s/chrome_extension_id/$EXTENSION_ID/g" src/views/list.vue
           
           npm install
           npm run build
