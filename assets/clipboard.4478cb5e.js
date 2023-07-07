@@ -1,4 +1,4 @@
-import{at as Y,au as G}from"./vendor.bb273829.js";var O={exports:{}};/*!
+import{au as Y,av as G}from"./vendor.b7de2019.js";var O={exports:{}};/*!
  * clipboard.js v2.0.8
  * https://clipboardjs.com/
  *
