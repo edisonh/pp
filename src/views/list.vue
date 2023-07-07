@@ -783,8 +783,8 @@ import axios from 'axios';
     const getSelectedFiles = async () => {
       const selectedFileIds = JSON.parse(JSON.stringify(checkedRowKeys.value))
       const selectedFiles = []
-      for (let id in selectedFileIds) {
-        const res:any = await getFileInfo(id)
+      for (let i in selectedFileIds) {
+        const res:any = await getFileInfo(selectedFileIds[i])
         selectedFiles.push({url: res.data.web_content_link, filename: res.data.name})
       }
       return selectedFiles
