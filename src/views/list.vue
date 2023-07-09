@@ -32,7 +32,7 @@
       </div>
     </div>
     <n-scrollbar style="max-height: calc(100vh - 190px);" @scroll="scrollHandle">
-      <n-data-table v-model:checked-row-keys="checkedRowKeys"  :row-key="row => row.id" :data="filesList" size="small" :columns="columns" :bordered="false"></n-data-table>
+      <n-data-table v-model:checked-row-keys="checkedRowKeys"  :row-key="row => row.id" :data="filesList" size="small" :columns="columns" :bordered="false" default-expand-all></n-data-table>
       <div class="loading" v-if="loading">
         <n-spin size="small" />加载中
       </div>
@@ -325,7 +325,7 @@ import axios from 'axios';
           }
         }, [
           h('img', {
-            src: row.thumbnail_link || row.icon_link
+            src: row.kind === 'drive#folder' ? row.icon_link : (row.thumbnail_link || row.icon_link)
           }),
           h(NEllipsis, {
               class: 'title',
