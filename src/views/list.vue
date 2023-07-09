@@ -19,6 +19,9 @@
           <n-button v-if="copyFiles?.length" @click="copyPost">
             粘贴已复制{{copyFiles.length}}项资源
           </n-button>
+          <n-button  @click="autoSelect">
+            自动选择
+          </n-button>
           <n-button  @click="showUserMenu = true">
             添加自定义菜单
           </n-button>
@@ -765,6 +768,54 @@ import axios from 'axios';
       }
     }
     nRef.value.content = '共获取到' + downFileList.value.length + '个文件'
+  }
+
+
+  const autoSelect = async () => {
+
+    const getFilesOfFolder = async (id:string) => {
+      const res:any = await http.get('https://api-drive.mypikpak.com/drive/v1/files', {
+        params: {
+          parent_id: id || undefined,
+          thumbnail_size: 'SIZE_LARGE',
+          with_audit: true,
+          page_token: '',
+          filters: {
+            "phase": {"eq": "PHASE_TYPE_COMPLETE"},
+            "trashed":{"eq":false}
+          }
+        }
+      })
+      return res.data.files
+    }
+
+    const getPrimaryInFolder = async (id:string) => {
+      const files = await getFilesOfFolder(id)
+      const primaryFiles = []
+      for (let i in files) {
+        if(files[i].kind === 'drive#file') {
+          const size = Number(files[i].size)
+          if (size/1024/1024 > 500) {
+            primaryFiles.push(files[i])
+          }
+        }
+      }
+      return primaryFiles
+    }
+
+    const getPrimaryInFolders = async () => {
+      for(let i in filesList.value) {
+        if(filesList.value[i].kind === 'drive#folder') {
+          const primaryFiles = await getPrimaryInFolder(filesList.value[i].id)
+          if (primaryFiles.length > 0) {
+            filesList.value[i].children = primaryFiles
+          }
+        }
+      }
+    }
+
+
+    getPrimaryInFolders()
   }
 
 
