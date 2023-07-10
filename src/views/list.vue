@@ -32,7 +32,7 @@
       </div>
     </div>
     <n-scrollbar style="max-height: calc(100vh - 190px);" @scroll="scrollHandle">
-      <n-data-table v-model:checked-row-keys="checkedRowKeys"  :row-key="row => row.id" :data="filesList" size="small" :columns="columns" :bordered="false" default-expand-all :indent="32" :expanded-row-keys="expandedRowKeys"></n-data-table>
+      <n-data-table v-model:checked-row-keys="checkedRowKeys"  :row-key="row => row.id" :data="filesList" size="small" :columns="columns" :bordered="false" default-expand-all :indent="32" v-model:expanded-row-keys="expandedRowKeys"></n-data-table>
       <div class="loading" v-if="loading">
         <n-spin size="small" />加载中
       </div>
