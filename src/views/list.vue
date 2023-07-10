@@ -834,25 +834,45 @@ import axios from 'axios';
       return `${localserverUrl}/search/vid/${encodeURIComponent(name)}`
     }
 
-    const getExistInfo = async (filename:string) => {
+    const getExistInfo = async (filename:string, size:number) => {
       const files:Array<any> = await getDownloadedFiles(filename)
       const url = getLocalFileUrl(filename)
       const name = filename + ' ' + files.map((f:any) => byteConvert(Number(f.size)) + (f.name=='delete' ? '-DEL' : '')).toString()
-      return {url, name}
+      let exist = false
+      for (let i in files) {
+        if (files[i].size === 0) {
+          exist = true
+          break
+        } else if (files[i].name == 'delete') {
+          exist = true
+          break
+        } else if (files[i].size === size) {
+          exist = true
+          break
+        }
+      }
+      return {url, name, exist}
     }
 
     getPrimaryInFolders()
     checkedRowKeys.value = []
     for(let i in filesList.value) {
       if (filesList.value[i].kind === 'drive#file') {
-        filesList.value[i].exist = await getExistInfo(filesList.value[i].name)
+        const info = await getExistInfo(filesList.value[i].name, Number(filesList.value[i].size))
+        filesList.value[i].exist = info
+        if (!info.exist) {
+          checkedRowKeys.value.push(filesList.value[i].id)
+        }
       } else if (filesList.value[i].kind === 'drive#folder' && filesList.value[i].children) {
         for (let j in filesList.value[i].children) {
-          filesList.value[i].children[j].exist = await getExistInfo(filesList.value[i].children[j].name)
+          const info = await getExistInfo(filesList.value[i].name, Number(filesList.value[i].size))
+          filesList.value[i].children[j].exist = info
+          if (!info.exist) {
+            checkedRowKeys.value.push(filesList.value[i].children[j].id)
+          }
         }
       }
-    }
-    
+    }    
   }
 
 
