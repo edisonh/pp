@@ -250,6 +250,7 @@
 </template>
 
 <script setup lang="ts">
+import {withModifiers} from 'vue';
 import { ref } from '@vue/reactivity';
 import { h, computed, onMounted, watch, nextTick } from '@vue/runtime-core'
 import http, { notionHttp } from '../utils/axios'
@@ -324,7 +325,7 @@ import axios from 'axios';
             }
           }
         }, [
-          h('span', {}, row.primary ? '--  ': ''),
+          h('span', {innerHTML: row.primary ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;': ''}),
           h('img', {
             src: row.kind === 'drive#folder' ? row.icon_link : (row.thumbnail_link || row.icon_link)
           }),
@@ -333,7 +334,12 @@ import axios from 'axios';
             },
             [
               h('span', {}, String(row.name)),
-              !row.exist ? h('span') : h('a', {style:'color: #306eff; text-decoration: underline; float: right;', target: '_blank', href: row.exist.url}, row.exist.name)
+              !row.exist ? h('span') : h('a', {
+                style:'color: #306eff; text-decoration: underline; float: right;', 
+                target: '_blank', 
+                href: row.exist.url,
+                onClick: withModifiers(() => {}, ['stop', 'prevent'])
+              }, row.exist.name)
             ]
             // {
             //   default: () => String(row.name)
