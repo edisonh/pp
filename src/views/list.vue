@@ -338,7 +338,7 @@ import axios from 'axios';
                 style:'color: #306eff; text-decoration: underline; float: right;', 
                 target: '_blank', 
                 href: row.exist.url,
-                onClick: withModifiers(() => {}, ['stop', 'prevent'])
+                onClick: withModifiers(() => {}, ['self'])
               }, row.exist.name)
             ]
             // {
@@ -896,8 +896,17 @@ import axios from 'axios';
 
     const getSelectedFiles = async () => {
       const selectedFileIds = JSON.parse(JSON.stringify(checkedRowKeys.value))
+      const folders = new Set<string>()
+      for(let i in filesList.value) {
+        if (filesList.value[i].kind === 'drive#folder') {
+          folders.add(filesList.value[i].id)
+        }
+      }
       const selectedFiles = []
       for (let i in selectedFileIds) {
+        if (folders.has(selectedFileIds[i])) {
+          continue
+        }
         const res:any = await getFileInfo(selectedFileIds[i])
         selectedFiles.push({url: res.data.web_content_link, filename: res.data.name})
       }
