@@ -871,7 +871,7 @@ import axios from 'axios';
         }
       } else if (filesList.value[i].kind === 'drive#folder' && filesList.value[i].children) {
         for (let j in filesList.value[i].children) {
-          const info = await getExistInfo(filesList.value[i].name, Number(filesList.value[i].size))
+          const info = await getExistInfo(filesList.value[i].children[j].name, Number(filesList.value[i].children[j].size))
           filesList.value[i].children[j].exist = info
           if (!info.exist) {
             checkedRowKeys.value.push(filesList.value[i].children[j].id)
