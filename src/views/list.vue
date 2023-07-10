@@ -324,6 +324,7 @@ import axios from 'axios';
             }
           }
         }, [
+          h('span', {}, row.primary ? ' - ' : ''),
           h('img', {
             src: row.kind === 'drive#folder' ? row.icon_link : (row.thumbnail_link || row.icon_link)
           }),
@@ -810,7 +811,7 @@ import axios from 'axios';
         if(filesList.value[i].kind === 'drive#folder') {
           let primaryFiles = await getPrimaryInFolder(filesList.value[i].id)
           if (primaryFiles.length > 0) {
-            primaryFiles.map(f => {f.name = ' - ' + f.name; return f})
+            primaryFiles.map(f => {f.primary = true; return f})
             filesList.value[i].children = primaryFiles
             expandedRowKeys.value.push(filesList.value[i].id)
           }
