@@ -331,9 +331,13 @@ import axios from 'axios';
           h(NEllipsis, {
               class: 'title',
             },
-            {
-              default: () => String(row.name)
-            }
+            [
+              h('span', {}, String(row.name)),
+              !row.exist ? h('span') : h('a', {src: row.exist.url}, row.exist.name)
+            ]
+            // {
+            //   default: () => String(row.name)
+            // }
           ),
           h('span', {
             class: 'action'
@@ -819,7 +823,36 @@ import axios from 'axios';
       }
     }
 
+    const localserverUrl = 'http://localhost:3000/xvideo'
+
+    const getDownloadedFiles = async (name:string) => {
+      const res:any = await http.get(`${localserverUrl}/files/${encodeURIComponent(name)}`)
+      return res.data.exist
+    }
+
+    const getLocalFileUrl = (name:string) => {
+      return `${localserverUrl}/search/vid/${encodeURIComponent(name)}`
+    }
+
+    const getExistInfo = async (filename:string) => {
+      const files:Array<any> = await getDownloadedFiles(filename)
+      const url = getLocalFileUrl(filename)
+      const name = filename + ' ' + files.map((f:any) => byteConvert(Number(f.size)) + (f.name=='delete' ? '-DEL' : '')).toString()
+      return {url, name}
+    }
+
     getPrimaryInFolders()
+    checkedRowKeys.value = []
+    for(let i in filesList.value) {
+      if (filesList.value[i].kind === 'drive#file') {
+        filesList.value[i].exist = await getExistInfo(filesList.value[i].name)
+      } else if (filesList.value[i].kind === 'drive#folder' && filesList.value[i].children) {
+        for (let j in filesList.value[i].children) {
+          filesList.value[i].children[j].exist = await getExistInfo(filesList.value[i].children[j].name)
+        }
+      }
+    }
+    
   }
 
 
