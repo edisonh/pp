@@ -338,7 +338,7 @@ import axios from 'axios';
                 style:'color: #306eff; text-decoration: underline; float: right;', 
                 target: '_blank', 
                 href: row.exist.url,
-                onClick: withModifiers(() => {}, ['prevent'])
+                onClick: withModifiers(() => {}, ['stop'])
               }, row.exist.name)
             ]
             // {
