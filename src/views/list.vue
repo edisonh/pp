@@ -808,10 +808,10 @@ import axios from 'axios';
       expandedRowKeys.value = []
       for(let i in filesList.value) {
         if(filesList.value[i].kind === 'drive#folder') {
-          const primaryFiles = await getPrimaryInFolder(filesList.value[i].id)
+          let primaryFiles = await getPrimaryInFolder(filesList.value[i].id)
           if (primaryFiles.length > 0) {
+            primaryFiles.map(f => {f.name = ' - ' + f.name; return f})
             filesList.value[i].children = primaryFiles
-            
             expandedRowKeys.value.push(filesList.value[i].id)
           }
         }
@@ -1417,6 +1417,10 @@ import axios from 'axios';
   100% {
     bottom: 52px;
   }
+}
+
+td i.n-base-icon.n-data-table-expand-trigger {
+  float: left;
 }
 
 </style>
