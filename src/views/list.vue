@@ -811,9 +811,8 @@ import axios from 'axios';
           const primaryFiles = await getPrimaryInFolder(filesList.value[i].id)
           if (primaryFiles.length > 0) {
             filesList.value[i].children = primaryFiles
-            for (let j in primaryFiles) {
-              expandedRowKeys.value.push(primaryFiles[j].id)
-            }
+            
+            expandedRowKeys.value.push(filesList.value[i].id)
           }
         }
       }
