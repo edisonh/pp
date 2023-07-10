@@ -338,7 +338,7 @@ import axios from 'axios';
                 style:'color: #306eff; text-decoration: underline; float: right;', 
                 target: '_blank', 
                 href: row.exist.url,
-                onClick: withModifiers(() => {}, ['self'])
+                onClick: withModifiers(() => {}, ['prevent'])
               }, row.exist.name)
             ]
             // {
@@ -921,7 +921,7 @@ import axios from 'axios';
     if (!nRef.value || !nRef.value.content) {
       nRef.value = notification.create({
         title: '批量下载文件',
-        closable: false,
+        closable: true,
         content: '正在获取文件列表...'
       })
     } else {
