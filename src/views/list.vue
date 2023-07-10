@@ -324,7 +324,7 @@ import axios from 'axios';
             }
           }
         }, [
-          h('span', {}, row.primary ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : ''),
+          h('span', {}, row.primary ? '       ' : ''),
           h('img', {
             src: row.kind === 'drive#folder' ? row.icon_link : (row.thumbnail_link || row.icon_link)
           }),
