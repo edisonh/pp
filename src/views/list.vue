@@ -324,7 +324,7 @@ import axios from 'axios';
             }
           }
         }, [
-          h('span', {}, row.primary ? '------': ''),
+          h('span', {}, row.primary ? '--  ': ''),
           h('img', {
             src: row.kind === 'drive#folder' ? row.icon_link : (row.thumbnail_link || row.icon_link)
           }),
@@ -333,7 +333,7 @@ import axios from 'axios';
             },
             [
               h('span', {}, String(row.name)),
-              !row.exist ? h('span') : h('a', {src: row.exist.url}, row.exist.name)
+              !row.exist ? h('span') : h('a', {target: '_blank', href: row.exist.url}, row.exist.name)
             ]
             // {
             //   default: () => String(row.name)
