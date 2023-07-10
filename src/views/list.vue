@@ -32,7 +32,7 @@
       </div>
     </div>
     <n-scrollbar style="max-height: calc(100vh - 190px);" @scroll="scrollHandle">
-      <n-data-table v-model:checked-row-keys="checkedRowKeys"  :row-key="row => row.id" :data="filesList" size="small" :columns="columns" :bordered="false" default-expand-all></n-data-table>
+      <n-data-table v-model:checked-row-keys="checkedRowKeys"  :row-key="row => row.id" :data="filesList" size="small" :columns="columns" :bordered="false" default-expand-all :indent="32" :expanded-row-keys="expandedRowKeys"></n-data-table>
       <div class="loading" v-if="loading">
         <n-spin size="small" />加载中
       </div>
@@ -770,6 +770,7 @@ import axios from 'axios';
     nRef.value.content = '共获取到' + downFileList.value.length + '个文件'
   }
 
+  const expandedRowKeys = ref<string[]>([])
 
   const autoSelect = async () => {
 
@@ -804,16 +805,19 @@ import axios from 'axios';
     }
 
     const getPrimaryInFolders = async () => {
+      expandedRowKeys.value = []
       for(let i in filesList.value) {
         if(filesList.value[i].kind === 'drive#folder') {
           const primaryFiles = await getPrimaryInFolder(filesList.value[i].id)
           if (primaryFiles.length > 0) {
             filesList.value[i].children = primaryFiles
+            for (let j in primaryFiles) {
+              expandedRowKeys.value.push(primaryFiles[j].id)
+            }
           }
         }
       }
     }
-
 
     getPrimaryInFolders()
   }
