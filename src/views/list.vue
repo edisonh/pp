@@ -770,6 +770,8 @@ import axios from 'axios';
     nRef.value.content = '共获取到' + downFileList.value.length + '个文件'
   }
 
+  const expandedRowKeys = ref<string[]>([])
+
   const autoSelect = async () => {
 
     const getFilesOfFolder = async (id:string) => {
@@ -803,11 +805,15 @@ import axios from 'axios';
     }
 
     const getPrimaryInFolders = async () => {
+      expandedRowKeys.value = []
       for(let i in filesList.value) {
         if(filesList.value[i].kind === 'drive#folder') {
           const primaryFiles = await getPrimaryInFolder(filesList.value[i].id)
           if (primaryFiles.length > 0) {
             filesList.value[i].children = primaryFiles
+            for (let j in primaryFiles) {
+              expandedRowKeys.value.push(primaryFiles[j].id)
+            }
           }
         }
       }
@@ -815,19 +821,6 @@ import axios from 'axios';
 
     getPrimaryInFolders()
   }
-
-  const expandedRowKeys = ref<string[]>([])
-
-  watch(filesList, async (newData, oldData) => {
-    expandedRowKeys.value = []
-    for (let i in newData.value) {
-      if (newData.value[i].children) {
-        for (let j in newData.value[i].children) {
-          expandedRowKeys.value.push(newData.value[i].children[i].id)
-        }
-      }
-    }
-  })
 
 
   const downloadAll = async () => {
