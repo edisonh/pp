@@ -324,11 +324,7 @@ import axios from 'axios';
             }
           }
         }, [
-          h('span', {
-            domProps: {
-              innerHTML: row.primary ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : ''
-            }
-          }),
+          h('span', {}, {innerHTML: row.primary ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : ''}),
           h('img', {
             src: row.kind === 'drive#folder' ? row.icon_link : (row.thumbnail_link || row.icon_link)
           }),
@@ -858,7 +854,7 @@ import axios from 'axios';
       return {url, name, exist}
     }
 
-    getPrimaryInFolders()
+    await getPrimaryInFolders()
     checkedRowKeys.value = []
     for(let i in filesList.value) {
       if (filesList.value[i].kind === 'drive#file') {
