@@ -333,7 +333,7 @@ import axios from 'axios';
             },
             [
               h('span', {}, String(row.name)),
-              !row.exist ? h('span') : h('a', {target: '_blank', href: row.exist.url}, row.exist.name)
+              !row.exist ? h('span') : h('a', {style:'color: #306eff; text-decoration: underline; float: right;', target: '_blank', href: row.exist.url}, row.exist.name)
             ]
             // {
             //   default: () => String(row.name)
