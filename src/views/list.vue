@@ -324,7 +324,7 @@ import axios from 'axios';
             }
           }
         }, [
-          h('span', {}, {innerHTML: row.primary ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : ''}),
+          h('span', {}, row.primary ? '------': ''),
           h('img', {
             src: row.kind === 'drive#folder' ? row.icon_link : (row.thumbnail_link || row.icon_link)
           }),
@@ -827,7 +827,7 @@ import axios from 'axios';
 
     const getDownloadedFiles = async (name:string) => {
       const res:any = await http.get(`${localserverUrl}/files/${encodeURIComponent(name)}`)
-      return res.data.exist
+      return res.data
     }
 
     const getLocalFileUrl = (name:string) => {
