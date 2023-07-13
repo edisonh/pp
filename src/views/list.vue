@@ -901,6 +901,16 @@ import axios from 'axios';
       return {url, name, exist}
     }
 
+    if (!nRef.value || !nRef.value.content) {
+      nRef.value = notification.create({
+        title: '自动选择视频',
+        closable: true,
+        content: '正在获取文件列表...'
+      })
+    } else {
+      nRef.value.content = '正在获取文件列表...'
+    }
+
     await getPrimaryInFolders()
     checkedRowKeys.value = []
     for(let i in filesList.value) {
@@ -919,7 +929,8 @@ import axios from 'axios';
           }
         }
       }
-    }    
+    }
+    nRef.value.content = '共选择' + checkedRowKeys.value.length + '个文件'
   }
 
 
