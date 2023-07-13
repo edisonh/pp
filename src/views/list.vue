@@ -1113,9 +1113,17 @@ import axios from 'axios';
   
   const batchMoveAll = (items:object) => {
     let text:string[] = []
-    filesList.value.forEach((item:FileInfo) => {
+    filesList.value.forEach((item:any) => {
       if(checkedRowKeys.value.indexOf(item.id) !== -1) {
        text.push(item.id)
+      } else {
+        if (item.children) {
+          for (let i in item.children) {
+            if(checkedRowKeys.value.indexOf(item.children[i].id) !== -1) {
+              text.push(item.children[i].id)
+            }
+          }
+        }
       }
     })
     batchMove(text)
