@@ -19,6 +19,9 @@
           <n-button v-if="copyFiles?.length" @click="copyPost">
             粘贴已复制{{copyFiles.length}}项资源
           </n-button>
+          <n-button  @click="expandDirs">
+            展开文件夹
+          </n-button>
           <n-button  @click="autoSelect">
             自动选择
           </n-button>
@@ -780,6 +783,40 @@ import axios from 'axios';
     }
     nRef.value.content = '共获取到' + downFileList.value.length + '个文件'
   }
+
+
+  const expandDirs = async () => {
+
+    const getFilesOfFolder = async (id:string) => {
+      const res:any = await http.get('https://api-drive.mypikpak.com/drive/v1/files', {
+        params: {
+          parent_id: id || undefined,
+          thumbnail_size: 'SIZE_LARGE',
+          with_audit: true,
+          page_token: '',
+          filters: {
+            "phase": {"eq": "PHASE_TYPE_COMPLETE"},
+            "trashed":{"eq":false}
+          }
+        }
+      })
+      return res.data.files
+    }
+
+    expandedRowKeys.value = []
+    for(let i in filesList.value) {
+      if(filesList.value[i].kind === 'drive#folder') {
+        let files:Array<any> = await getFilesOfFolder(filesList.value[i].id)
+        if (files.length > 0) {
+          files = files.map(f => {f.primary = true; return f})
+          filesList.value[i].children = files
+          expandedRowKeys.value.push(filesList.value[i].id)
+        }
+      }
+    }
+
+  }
+
 
   const expandedRowKeys = ref<string[]>([])
 
