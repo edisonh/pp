@@ -804,6 +804,7 @@ import axios from 'axios';
     }
 
     expandedRowKeys.value = []
+    checkedRowKeys.value = []
     for(let i in filesList.value) {
       if(filesList.value[i].kind === 'drive#folder') {
         let files:Array<any> = await getFilesOfFolder(filesList.value[i].id)
@@ -811,6 +812,9 @@ import axios from 'axios';
           files = files.map(f => {f.primary = true; return f})
           filesList.value[i].children = files
           expandedRowKeys.value.push(filesList.value[i].id)
+          for (let j in files) {
+            checkedRowKeys.value.push(files[j].id)
+          }
         }
       }
     }
