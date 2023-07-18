@@ -342,7 +342,7 @@ import axios from 'axios';
                 target: '_blank', 
                 href: row.exist.url,
                 onClick: withModifiers(() => {}, ['stop'])
-              }, row.exist.name)
+              }, [row.exist.filename, h('span', {style: 'color:red'}, row.exist.size)])
             ]
             // {
             //   default: () => String(row.name)
@@ -884,7 +884,7 @@ import axios from 'axios';
     const getExistInfo = async (filename:string, size:number) => {
       const files:Array<any> = await getDownloadedFiles(filename)
       const url = getLocalFileUrl(filename)
-      const name = filename + ' ' + files.map((f:any) => byteConvert(Number(f.size)) + (f.name=='delete' ? '-DEL' : '')).toString()
+      const existSize = files.map((f:any) => (f.full_match ? 'match:' : '') + byteConvert(Number(f.size)) + (f.name=='delete' ? '-DEL' : '')).toString()
       let exist = false
       for (let i in files) {
         if (files[i].size === 0) {
@@ -898,7 +898,7 @@ import axios from 'axios';
           break
         }
       }
-      return {url, name, exist}
+      return {url, filename, size: existSize, exist}
     }
 
     if (!nRef.value || !nRef.value.content) {
