@@ -21,6 +21,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('../views/list.vue')
       },
       {
+        path: 'search',
+        name: 'search',
+        component: () => import('../views/search.vue')
+      },
+      {
         path: 'video',
         name: 'video',
         component: () => import('../views/list.vue')
