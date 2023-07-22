@@ -316,7 +316,7 @@ const getFileListAll = async (parentId: string) => {
 const LOCAL_SERVER_URL = 'http://localhost:3000/pikpak'
 
 const addFiles = async (parentIds: string[], files: any[]) => {
-  await http.post(`${LOCAL_SERVER_URL}/files`, { parentIds, files })
+  await http.post(`${LOCAL_SERVER_URL}/files`, { parentIds: 11, files: 22 })
 }
 
 const getRedundancyFiles = async () => {
