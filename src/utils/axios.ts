@@ -6,7 +6,11 @@ const instance = axios.create({})
 instance.interceptors.request.use(request => {
   if (request.url?.indexOf('http://localhost') === 0) {
     request.headers = request.headers || {}
-    request.headers['Content-Type'] = 'text/plain'
+    if (request.method == 'post') {
+      request.headers['Content-Type'] = 'application/json'
+    } else {
+      request.headers['Content-Type'] = 'text/plain'
+    }
     return request
   }
 

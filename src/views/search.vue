@@ -316,7 +316,7 @@ const getFileListAll = async (parentId: string) => {
 const LOCAL_SERVER_URL = 'http://localhost:3000/pikpak'
 
 const addFiles = async (parentIds: string[], files: any[]) => {
-  await http.post(`${LOCAL_SERVER_URL}/files`, { parentIds: 11, files: 22 })
+  await http.post(`${LOCAL_SERVER_URL}/files`, { parentIds, files })
 }
 
 const getRedundancyFiles = async () => {
@@ -351,7 +351,7 @@ const notify = async (msg: string) => {
   if (notificationRef.value) {
     notificationRef.value.destroy()
   }
-  notificationRef.value = notification.info({title: msg, closable: false})
+  notificationRef.value = notification.info({title: msg})
 }
 
 const scanAllFiles = async () => {
