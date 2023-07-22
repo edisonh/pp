@@ -303,12 +303,13 @@ const getFileListAll = async (parentId: string) => {
   const limit = 100
   let nextPageToken = ''
   let files:any = []
-  for (;;) {
+  for (let i = 0; i < 10; i++) {
     const res = await getFileList(parentId, limit, nextPageToken)
     files = files.concat(res.files)
     if (res.files.length < limit || !res.next_page_token) {
       break
     }
+    nextPageToken = res.next_page_token
   }
   return files
 }
