@@ -359,7 +359,7 @@ const deepScan = async (parentIds: string[]) => {
     if(files[i].kind == 'drive#folder') {
       const localFile = await findFileById(files[i].id)
       if (!localFile.scanned) {
-        await sleep(1000)
+        await sleep(2000)
         await deepScan(parentIds.concat([files[i].id]))
       }
     }
