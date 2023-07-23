@@ -21,9 +21,11 @@
           <n-button  @click="scanRedundancy">
             检查重复文件
           </n-button>
-          <n-button  @click="scanAllFiles">
-            重新扫描
-          </n-button>
+          <n-popconfirm @positive-click="scanAllFiles" >
+            <n-button>
+              重新扫描
+            </n-button>
+          </n-popconfirm>
         </n-space>
       </div>
     </div>
@@ -77,7 +79,7 @@ import { ref } from '@vue/reactivity';
 import { h, computed, onMounted, watch, nextTick } from '@vue/runtime-core'
 import http, { notionHttp } from '../utils/axios'
 import { useRoute, useRouter } from 'vue-router'
-import { DataTableColumns, NDataTable, NTime, NEllipsis, NModal, NCard, NInput, NBreadcrumb, NBreadcrumbItem, NIcon, NButton, NTooltip, NSpace, NScrollbar, NSpin, NDropdown, useDialog, NAlert, useNotification, NotificationReactive, NSelect, NForm, NFormItem, NTag, NText, NInputGroup } from 'naive-ui'
+import { NPopconfirm, DataTableColumns, NDataTable, NTime, NEllipsis, NModal, NCard, NInput, NBreadcrumb, NBreadcrumbItem, NIcon, NButton, NTooltip, NSpace, NScrollbar, NSpin, NDropdown, useDialog, NAlert, useNotification, NotificationReactive, NSelect, NForm, NFormItem, NTag, NText, NInputGroup } from 'naive-ui'
 import { Search, CirclePlus, CircleX, Dots, Share, Copy as IconCopy, SwitchHorizontal, LetterA, ZoomQuestion, Download as IconDownload} from '@vicons/tabler'
 import { byteConvert } from '../utils'
 import ClipboardJS from 'clipboard'
@@ -163,8 +165,7 @@ const columns = ref<DataTableColumns>([
       return h('div', { class: 'file-info' }, 
       [
         h('img', { src: row.icon_link }),
-        h(NEllipsis, { class: 'title' }, { default: () => String(row.name) }),
-        h('span', { class: 'action' }, '1')
+        h(NEllipsis, { class: 'title' }, { default: () => String(row.path) })
       ])
     }
   }
@@ -278,7 +279,7 @@ const searchFiles = async () => {
 }
 
 const scanRedundancy = async () => {
-
+  filesList.value = await getRedundancyFiles();
 }
 
 const getFileList = async (parent_id: string, limit: number, page_token: string) => {
