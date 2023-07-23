@@ -699,7 +699,7 @@ import axios from 'axios';
     })
   }
   const deleteFileRecords = async (ids: string[]) => {
-    await http.get(`${localserverUrl}/delete/files/${ids.join(',')}`)
+    await http.get(`http://localhost:3000/pikpak/delete/files/${ids.join(',')}`)
   }
   const deleteFile = (id:string | string[]) => {
     http.post('https://api-drive.mypikpak.com/drive/v1/files:batchTrash', {
