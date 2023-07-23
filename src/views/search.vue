@@ -21,10 +21,11 @@
           <n-button  @click="scanRedundancy">
             检查重复文件
           </n-button>
+          
           <n-popconfirm @positive-click="scanAllFiles" >
-            <n-button>
-              重新扫描
-            </n-button>
+            <template #trigger>
+              <n-button>重新扫描</n-button>
+            </template>
           </n-popconfirm>
         </n-space>
       </div>
