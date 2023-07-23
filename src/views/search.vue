@@ -224,6 +224,7 @@ const deleteFile = (id: string | string[]) => {
   .then(() => {
       window.$message.success('删除成功')
       checkedRowKeys.value = []
+      deleteFileRecords(typeof id === 'string' ? [id] : id)
   })
 }
 
@@ -325,6 +326,10 @@ const addFiles = async (parentIds: string[], files: any[]) => {
 const getRedundancyFiles = async () => {
   const res: any = await http.get(`${LOCAL_SERVER_URL}/files/redundancy`)
   return res.data
+}
+
+const deleteFileRecords = async (ids: string[]) => {
+  await http.get(`${LOCAL_SERVER_URL}/delete/files/${ids.join(',')}`)
 }
 
 const queryFiles = async (query: string, value: string) => {
