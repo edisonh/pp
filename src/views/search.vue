@@ -343,6 +343,14 @@ const deepClone = (src: any) => {
   return JSON.parse(JSON.stringify(src))
 }
 
+const sleep = async (ms: number) => {
+  return new Promise((resolve: any, reject) => {
+    setTimeout(() => {
+      resolve()
+    }, ms)
+  });
+}
+
 const deepScan = async (parentIds: string[]) => {
   const parentId = parentIds[parentIds.length - 1]
   const files = await getFileListAll(parentId)
@@ -351,6 +359,7 @@ const deepScan = async (parentIds: string[]) => {
     if(files[i].kind == 'drive#folder') {
       const localFile = await findFileById(files[i].id)
       if (!localFile.scanned) {
+        await sleep(500)
         await deepScan(parentIds.concat([files[i].id]))
       }
     }
