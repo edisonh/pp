@@ -330,6 +330,15 @@ const queryFiles = async (query: string, value: string) => {
   return res.data
 }
 
+const findFileById = async (id: string) => {
+  const res: any = await http.get(`${LOCAL_SERVER_URL}/file/${id}`)
+  return res.data
+}
+
+const markScanned = async (id: string) => {
+  await http.get(`${LOCAL_SERVER_URL}/file/scanned/${id}`)
+}
+
 const deepClone = (src: any) => {
   return JSON.parse(JSON.stringify(src))
 }
@@ -340,11 +349,17 @@ const deepScan = async (parentIds: string[]) => {
   await addFiles(parentIds, files)
   for (let i = 0; i < files.length; i++) {
     if(files[i].kind == 'drive#folder') {
-      await deepScan(parentIds.concat([files[i].id]))
+      const localFile = await findFileById(files[i].id)
+      if (!localFile.scanned) {
+        await deepScan(parentIds.concat([files[i].id]))
+      }
     }
     if (parentIds.length == 1) {
       notify(`已扫描${Math.floor((i+1)/files.length*100)}%(${i+1}/${files.length})...`)
     }
+  }
+  if (parentId != '') {
+    await markScanned(parentId)
   }
 }
 
