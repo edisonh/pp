@@ -110,6 +110,8 @@ const notification = useNotification()
 const notificationRef = ref<NotificationReactive>()
 const query = ref<string>('')
 
+let lastAction: any = null
+
 const columns = ref<DataTableColumns>([
   {
     type: 'selection'
@@ -222,9 +224,12 @@ const deleteFile = (id: string | string[]) => {
     ids: typeof id === 'string' ? [id] : id
   })
   .then(() => {
+      deleteFileRecords(typeof id === 'string' ? [id] : id)
       window.$message.success('删除成功')
       checkedRowKeys.value = []
-      deleteFileRecords(typeof id === 'string' ? [id] : id)
+      if (lastAction) {
+        lastAction()
+      }
   })
 }
 
@@ -282,6 +287,7 @@ const searchFiles = async () => {
 
 const scanRedundancy = async () => {
   filesList.value = await getRedundancyFiles();
+  lastAction = scanRedundancy
 }
 
 const getFileList = async (parent_id: string, limit: number, page_token: string) => {
