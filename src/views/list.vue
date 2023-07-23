@@ -280,6 +280,7 @@ import axios from 'axios';
     size: number,
     hash: string
   }
+  const localserverUrl = 'http://localhost:3000/xvideo'
   const themeVars = useThemeVars()
   const checkedRowKeys = ref<string[]>([])
   const dialog = useDialog()
@@ -697,11 +698,15 @@ import axios from 'axios';
       }
     })
   }
+  const deleteFileRecords = async (ids: string[]) => {
+    await http.get(`${localserverUrl}/delete/files/${ids.join(',')}`)
+  }
   const deleteFile = (id:string | string[]) => {
     http.post('https://api-drive.mypikpak.com/drive/v1/files:batchTrash', {
       ids: typeof id === 'string' ? [id] : id
     })
       .then(() => {
+        deleteFileRecords(typeof id === 'string' ? [id] : id)
         window.$message.success('删除成功')
         pageToken.value = ''
         if(typeof id === 'object') {
@@ -870,7 +875,7 @@ import axios from 'axios';
       }
     }
 
-    const localserverUrl = 'http://localhost:3000/xvideo'
+    
 
     const getDownloadedFiles = async (name:string) => {
       const res:any = await http.get(`${localserverUrl}/files/${encodeURIComponent(name)}`)
