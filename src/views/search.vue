@@ -282,7 +282,8 @@ const downloadAll = async () => {
 }
    
 const searchFiles = async () => {
-  
+  filesList.value = await queryFiles('name', query.value)
+  lastAction = searchFiles
 }
 
 const scanRedundancy = async () => {
