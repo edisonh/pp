@@ -392,7 +392,7 @@ const notify = async (msg: string) => {
   }
   notificationRef.value = notification.info({title: msg, onClose: () => {
     notificationRef.value?.destroy()
-    return true
+    return false
   }})
 }
 

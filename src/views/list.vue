@@ -518,6 +518,12 @@ import axios from 'axios';
       })
     }
   ])
+
+  const findFileById = async (id: string) => {
+    const res: any = await http.get(`http://localhost:3000/pikpak/file/${id}`)
+    return res.data
+  }
+
   const loading = ref(false)
   const pageToken = ref()
   const getFileList = () => {
@@ -544,12 +550,17 @@ import axios from 'axios';
         filters: filters
       }
     })
-      .then((res:any) => {
+      .then(async (res:any) => {
         const {data} = res
         if(!pageToken.value) {
           filesList.value = []
         }
-        filesList.value = filesList.value.concat(data.files)
+        const files = []
+        for (let i =0 ; i < data.files.length; i++) {
+          const lf = await findFileById(data.files[i].id)
+          files.push({...data.files[i], scanned: lf.scanned})
+        }
+        filesList.value = filesList.value.concat(files)
         pageToken.value = data.next_page_token
       })
       .finally(() => {
