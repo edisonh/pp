@@ -390,7 +390,10 @@ const notify = async (msg: string) => {
   if (notificationRef.value) {
     notificationRef.value.destroy()
   }
-  notificationRef.value = notification.info({title: msg})
+  notificationRef.value = notification.info({title: msg, onClose: () => {
+    notificationRef.value?.destroy()
+    return true
+  }})
 }
 
 const scanAllFiles = async () => {

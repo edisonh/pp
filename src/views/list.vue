@@ -103,6 +103,16 @@
             删除所选
           </n-tooltip>
         </div>
+        <div class="toolbar-item" @click="setScannable(checkedRowKeys)">
+          <n-tooltip>
+            <template #trigger>
+              <n-icon>
+                <folder-plus></folder-plus>
+              </n-icon>
+            </template>
+            重置到可扫描状态
+          </n-tooltip>
+        </div>
       </div>
     </div>
     <n-modal v-model:show="showAddUrl">
@@ -259,7 +269,7 @@ import { h, computed, onMounted, watch, nextTick } from '@vue/runtime-core'
 import http, { notionHttp } from '../utils/axios'
 import { useRoute, useRouter } from 'vue-router'
 import { DataTableColumns, NDataTable, NTime, NEllipsis, NModal, NCard, NInput, NBreadcrumb, NBreadcrumbItem, NIcon, useThemeVars, NButton, NTooltip, NSpace, NScrollbar, NSpin, NDropdown, useDialog, NAlert, useNotification, NotificationReactive, NSelect, NForm, NFormItem, NTag, NText, NInputGroup } from 'naive-ui'
-import { CirclePlus, CircleX, Dots, Share, Copy as IconCopy, SwitchHorizontal, LetterA, ZoomQuestion, Download as IconDownload} from '@vicons/tabler'
+import { CirclePlus, CircleX, Dots, Share, Copy as IconCopy, SwitchHorizontal, LetterA, ZoomQuestion, Download as IconDownload, FolderPlus} from '@vicons/tabler'
 import { byteConvert } from '../utils'
 import PlyrVue from '../components/Plyr.vue'
 import TaskVue from '../components/Task.vue'
@@ -329,7 +339,7 @@ import axios from 'axios';
             }
           }
         }, [
-          h('span', {innerHTML: row.primary ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;': ''}),
+          h('span', {innerHTML: row.primary ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;': '', style: (!row.scanned && row.kind === 'drive#folder') ? 'width:8px; height:8px; background-color:#f16666; border-radius:50%; position: absolute; left: 58px;' : ''}),
           h('img', {
             src: row.kind === 'drive#folder' ? row.icon_link : (row.thumbnail_link || row.icon_link)
           }),
@@ -1413,6 +1423,15 @@ import axios from 'axios';
         })
       })
   }
+
+  const setScannable = async (id:string | string[]) => {
+    const ids = typeof id === 'string' ? [id] : id
+    for (let i = 0; i < ids.length; i++) {
+      await http.get(`http://localhost:3000/pikpak/file/toscan/${ids[i]}`)
+    }
+    window.$message.success('设置成功')
+  }
+
 </script>
 
 <style>
