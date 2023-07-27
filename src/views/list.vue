@@ -558,7 +558,7 @@ import axios from 'axios';
         const files = []
         for (let i =0 ; i < data.files.length; i++) {
           const lf = await findFileById(data.files[i].id)
-          files.push({...data.files[i], scanned: lf.scanned})
+          files.push({...data.files[i], scanned: lf ? lf.scanned : false})
         }
         filesList.value = filesList.value.concat(files)
         pageToken.value = data.next_page_token
