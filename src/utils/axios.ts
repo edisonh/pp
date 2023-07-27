@@ -26,6 +26,8 @@ instance.interceptors.request.use(request => {
       request.url = proxyArray[index] + '/' + request.url
     }
   }
+  delete request.headers['Origin']
+  request.headers['Referer'] = 'https://mypikpak.com/'
   return request
 })
 let isLoginLoading = false
