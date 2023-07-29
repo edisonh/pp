@@ -23,7 +23,7 @@ instance.interceptors.request.use(request => {
 })
 
 instance.interceptors.request.use(async (request:any) => {
-  if(request.url?.indexOf('https://', 4) < 0) {
+  if(request.url?.indexOf('http://localhost') < 0 && request.url?.indexOf('https://', 4) < 0) {
     const proxyArray = JSON.parse(window.localStorage.getItem('proxy') || '[]')
     if (proxyArray.length > 0) {
       const index = Math.floor((Math.random() * proxyArray.length))
