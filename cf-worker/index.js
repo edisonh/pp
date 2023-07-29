@@ -67,8 +67,9 @@ addEventListener('fetch', event => {
                     fp.headers[h[0]] = h[1];
                 }
             }
+            fp.headers['origin'] = 'https://mypikpak.com/'
             fp.headers['referer'] = 'https://mypikpak.com/'
-            const rqHost = reqHeaders.get('origin')||'https://mysecpikpak.finexyz.shop'
+            const rqHost = 'https://mysecpikpak.finexyz.shop'
             // 是否带 body
             if (["POST", "PUT", "PATCH", "DELETE"].indexOf(request.method) >= 0) {
                 const ct = (reqHeaders.get('content-type') || "").toLowerCase();

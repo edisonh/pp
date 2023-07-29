@@ -34,7 +34,7 @@ instance.interceptors.request.use(async (request:any) => {
 })
 
 instance.interceptors.request.use(async (request:any) => {
-  if (request.url?.indexOf('http://localhost') < 0 && request.url?.indexOf('/v1/shield/captcha/init') < 0 && request.url.indexOf('/v1/auth/signin') < 0) {
+  if (request.url?.indexOf('http://localhost') < 0 && request.url?.indexOf('/v1/shield/captcha/init') < 0 && request.url?.indexOf('/v1/auth/signin') < 0) {
     const pikpakLogin = JSON.parse(window.localStorage.getItem('pikpakLogin') || '{}')
     request.headers = request.headers || {}
     if (pikpakLogin.access_token) {
@@ -43,7 +43,27 @@ instance.interceptors.request.use(async (request:any) => {
   }
   if (request.url?.indexOf('http://localhost') < 0 && request.url?.indexOf('/v1/shield/captcha/init') < 0) {
     const client = JSON.parse(window.localStorage.getItem('pikpakClient')||'{}')
+    request.headers = request.headers || {}
     request.headers['X-Device-Id'] = client.deviceId
+  }
+  if (request.url?.indexOf('/v1/auth/signin') >= 0) {
+    const client = JSON.parse(window.localStorage.getItem('pikpakClient')||'{}')
+    const headers:any = {
+      "X-Client-Id": client.clientId,
+      "X-Client-Version": '1.0.0',
+      "X-Device-Id": client.deviceId,
+      "X-Device-Model": 'chrome%2F114.0.0.0',
+      "X-Device-Name": 'PC-Chrome',
+      "X-Device-Sign": 'wdi10.'+client.deviceId+'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      "X-Net-Work-Type": 'NONE',
+      "X-Os-Version": 'MacIntel',
+      "X-Platform-Version": 1,
+      "X-Protocol-Version": 301,
+      "X-Provider-Name": 'NONE',
+      "X-Sdk-Version": '6.0.0'
+    }
+    request.headers = request.headers || {}
+    request.headers =  {...request.headers, ...headers}
   }
   return request
 })
