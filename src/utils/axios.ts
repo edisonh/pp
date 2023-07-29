@@ -34,7 +34,7 @@ instance.interceptors.request.use(async (request:any) => {
 })
 
 instance.interceptors.request.use(async (request:any) => {
-  if (request.url?.indexOf('/v1/auth/signin') < 0) {
+  if (request.url?.indexOf('/v1/shield/captcha/init') < 0) {
     return request
   }
   const client = JSON.parse(window.localStorage.getItem('pikpakClient')||'{}')
