@@ -230,7 +230,22 @@ async function fetchCaptchaToken(action: string) {
       user_id: sub
     }
   }
-  const res:any = await instance.post('https://user.mypikpak.com/v1/shield/captcha/init', params)
+  const headers:any = {
+    "X-Client-Id": client.clientId,
+    "X-Client-Version": '1.0.0',
+    "X-Device-Id": client.deviceId,
+    "X-Device-Model": 'chrome%2F114.0.0.0',
+    "X-Device-Name": 'PC-Chrome',
+    "X-Device-Sign": 'wdi10.'+client.deviceId+'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    "X-Net-Work-Type": 'NONE',
+    "X-Os-Version": 'MacIntel',
+    "X-Platform-Version": 1,
+    "X-Protocol-Version": 301,
+    "X-Provider-Name": 'NONE',
+    "X-Sdk-Version": '6.0.0'
+  }
+
+  const res:any = await instance.post('https://user.mypikpak.com/v1/shield/captcha/init', params, {headers})
   if (res && res.data && res.data.captcha_token) {
     const newCaptchaToken = res.data.captcha_token
     window.localStorage.setItem('captcha_token_'+action, newCaptchaToken)

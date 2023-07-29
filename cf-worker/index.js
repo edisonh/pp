@@ -14,9 +14,10 @@ addEventListener('fetch', event => {
     //请求头部、返回对象
     let reqHeaders = new Headers(request.headers),
         outBody, outStatus = 200, outStatusText = 'OK', outCt = null, outHeaders = new Headers({
-            "Access-Control-Allow-Origin": reqHeaders.get('Origin'),
+            "Access-Control-Allow-Origin": reqHeaders.get('Origin') || '*',
             "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-            "Access-Control-Allow-Headers": reqHeaders.get('Access-Control-Allow-Headers') || "Accept, Authorization, Cache-Control, Content-Type, DNT, If-Modified-Since, Keep-Alive, Origin, User-Agent, X-Requested-With, Token, x-access-token, Notion-Version"
+            "Access-Control-Allow-Headers": "*"
+            //"Access-Control-Allow-Headers": reqHeaders.get('Access-Control-Allow-Headers') || "Accept, Authorization, Cache-Control, Content-Type, DNT, If-Modified-Since, Keep-Alive, Origin, User-Agent, X-Requested-With, Token, x-access-token, Notion-Version"
         });
   
     try {
