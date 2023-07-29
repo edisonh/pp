@@ -8,6 +8,19 @@ let isLoginLoading = false
 
 window.localStorage.setItem('timestamp', ''+new Date().valueOf())
 
+instance.interceptors.request.use(request => {
+  if (request.url?.indexOf('http://localhost') === 0) {
+    request.headers = request.headers || {}
+    if (request.method == 'post') {
+      request.headers['Content-Type'] = 'application/json'
+    } else {
+      request.headers['Content-Type'] = 'text/plain'
+    }
+    return request
+  }
+
+  return request
+})
 
 instance.interceptors.request.use(async (request:any) => {
   if(request.url?.indexOf('https://', 4) < 0) {
@@ -166,7 +179,7 @@ async function fetchCaptchaToken(action: string) {
   } else {
     const captchaToken = window.localStorage.getItem('last_captcha_token')
     if (!captchaToken) {
-      throw {response: {status: 401}, message: 'No captcha token'}
+      throw {response: {status: 401}, message: 'No captcha token', config: {url: 'fk'}}
     }
     const timestamp = window.localStorage.getItem('timestamp')||''
     const {sub} = JSON.parse(window.localStorage.getItem('pikpakLogin')||'{sub: ""}')
@@ -193,7 +206,7 @@ async function fetchCaptchaToken(action: string) {
     "X-Provider-Name": 'NONE',
     "X-Sdk-Version": '6.0.0'
   }
-  const res:any = await instance.post('https://user.mypikpak.com/v1/shield/captcha/init', params, {headers})
+  const res:any = await instance.post('https://user.mypikpak.com/v1/shield/captcha/init', params, {headers: {...axios.defaults.headers, ...headers}})
   if (res && res.data && res.data.captcha_token) {
     const newCaptchaToken = res.data.captcha_token
     window.localStorage.setItem('captcha_token_'+action, newCaptchaToken)
