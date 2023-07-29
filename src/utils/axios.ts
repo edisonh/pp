@@ -57,17 +57,17 @@ instance.interceptors.request.use((request:any) => {
   // }
   request.headers = request.headers || {}
   request.headers["X-Client-Id"] = client.clientId
-  request.headers["X-Client-Version"] = '1.0.0'
+  // request.headers["X-Client-Version"] = '1.0.0'
   request.headers["X-Device-Id"] = client.deviceId
-  request.headers["X-Device-Model"] = 'chrome%2F114.0.0.0'
-  request.headers["X-Device-Name"] = 'PC-Chrome'
-  request.headers["X-Device-Sign"] = 'wdi10.'+client.deviceId+'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-  request.headers["X-Net-Work-Type"] = 'NONE'
-  request.headers["X-Os-Version"] = 'MacIntel'
-  request.headers["X-Platform-Version"] = 1
-  request.headers["X-Protocol-Version"] = 301
-  request.headers["X-Provider-Name"] = 'NONE'
-  request.headers["X-Sdk-Version"] = '6.0.0'
+  // request.headers["X-Device-Model"] = 'chrome%2F114.0.0.0'
+  // request.headers["X-Device-Name"] = 'PC-Chrome'
+  // request.headers["X-Device-Sign"] = 'wdi10.'+client.deviceId+'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+  // request.headers["X-Net-Work-Type"] = 'NONE'
+  // request.headers["X-Os-Version"] = 'MacIntel'
+  // request.headers["X-Platform-Version"] = 1
+  // request.headers["X-Protocol-Version"] = 301
+  // request.headers["X-Provider-Name"] = 'NONE'
+  // request.headers["X-Sdk-Version"] = '6.0.0'
   return request
 })
 
