@@ -33,43 +33,43 @@ instance.interceptors.request.use(async (request:any) => {
   return request
 })
 
-instance.interceptors.request.use((request:any) => {
-  if (request.url?.indexOf('/v1/shield/captcha/init') < 0) {
-    return request
-  }
-  const client = JSON.parse(window.localStorage.getItem('pikpakClient')||'{}')
-  if (!client.clientId) {
-    return request
-  }
-  // const headers:any = {
-  //   "X-Client-Id": client.clientId,
-  //   "X-Client-Version": '1.0.0',
-  //   "X-Device-Id": client.deviceId,
-  //   "X-Device-Model": 'chrome%2F114.0.0.0',
-  //   "X-Device-Name": 'PC-Chrome',
-  //   "X-Device-Sign": 'wdi10.'+client.deviceId+'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-  //   "X-Net-Work-Type": 'NONE',
-  //   "X-Os-Version": 'MacIntel',
-  //   "X-Platform-Version": 1,
-  //   "X-Protocol-Version": 301,
-  //   "X-Provider-Name": 'NONE',
-  //   "X-Sdk-Version": '6.0.0'
-  // }
-  request.headers = request.headers || {}
-  request.headers["X-Client-Id"] = client.clientId
-  // request.headers["X-Client-Version"] = '1.0.0'
-  request.headers["X-Device-Id"] = client.deviceId
-  // request.headers["X-Device-Model"] = 'chrome%2F114.0.0.0'
-  // request.headers["X-Device-Name"] = 'PC-Chrome'
-  // request.headers["X-Device-Sign"] = 'wdi10.'+client.deviceId+'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-  // request.headers["X-Net-Work-Type"] = 'NONE'
-  // request.headers["X-Os-Version"] = 'MacIntel'
-  // request.headers["X-Platform-Version"] = 1
-  // request.headers["X-Protocol-Version"] = 301
-  // request.headers["X-Provider-Name"] = 'NONE'
-  // request.headers["X-Sdk-Version"] = '6.0.0'
-  return request
-})
+// instance.interceptors.request.use((request:any) => {
+//   if (request.url?.indexOf('/v1/shield/captcha/init') < 0) {
+//     return request
+//   }
+//   const client = JSON.parse(window.localStorage.getItem('pikpakClient')||'{}')
+//   if (!client.clientId) {
+//     return request
+//   }
+//   // const headers:any = {
+//   //   "X-Client-Id": client.clientId,
+//   //   "X-Client-Version": '1.0.0',
+//   //   "X-Device-Id": client.deviceId,
+//   //   "X-Device-Model": 'chrome%2F114.0.0.0',
+//   //   "X-Device-Name": 'PC-Chrome',
+//   //   "X-Device-Sign": 'wdi10.'+client.deviceId+'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+//   //   "X-Net-Work-Type": 'NONE',
+//   //   "X-Os-Version": 'MacIntel',
+//   //   "X-Platform-Version": 1,
+//   //   "X-Protocol-Version": 301,
+//   //   "X-Provider-Name": 'NONE',
+//   //   "X-Sdk-Version": '6.0.0'
+//   // }
+//   request.headers = request.headers || {}
+//   //request.headers["X-Client-Id"] = client.clientId
+//   // request.headers["X-Client-Version"] = '1.0.0'
+//   request.headers["X-Device-Id"] = client.deviceId
+//   // request.headers["X-Device-Model"] = 'chrome%2F114.0.0.0'
+//   // request.headers["X-Device-Name"] = 'PC-Chrome'
+//   // request.headers["X-Device-Sign"] = 'wdi10.'+client.deviceId+'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+//   // request.headers["X-Net-Work-Type"] = 'NONE'
+//   // request.headers["X-Os-Version"] = 'MacIntel'
+//   // request.headers["X-Platform-Version"] = 1
+//   // request.headers["X-Protocol-Version"] = 301
+//   // request.headers["X-Provider-Name"] = 'NONE'
+//   // request.headers["X-Sdk-Version"] = '6.0.0'
+//   return request
+// })
 
 instance.interceptors.request.use(async (request:any) => {
   if (request.url?.indexOf('/v1/shield/captcha/init') < 0 && request.url.indexOf('/v1/auth/signin') < 0) {
