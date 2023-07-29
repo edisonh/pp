@@ -40,6 +40,8 @@ instance.interceptors.request.use(async (request:any) => {
     if (pikpakLogin.access_token) {
       request.headers['Authorization'] = `${pikpakLogin.token_type || 'Bearer'} ${pikpakLogin.access_token}`
     }
+  }
+  if (request.url?.indexOf('http://localhost') < 0 && request.url?.indexOf('/v1/shield/captcha/init') < 0) {
     const client = JSON.parse(window.localStorage.getItem('pikpakClient')||'{}')
     request.headers['X-Device-Id'] = client.deviceId
   }
@@ -103,10 +105,12 @@ instance.interceptors.response.use(response => {
         if(loginDataJson.username && loginDataJson.password && !isLoginLoading) {
           console.log('wait', config.url)
           isLoginLoading = true
+          const client = JSON.parse(window.localStorage.getItem('pikpakClient')||'{}')
           return instance.post('https://user.mypikpak.com/v1/auth/signin', {
-            "captcha_token": "",
-            "client_id": "YNxT9w7GMdWvEOKa",
-            "client_secret": "dbw2OtmVEeuUvIptb1Coyg",
+            // "captcha_token": "",
+            // "client_id": "YNxT9w7GMdWvEOKa",
+            // "client_secret": "dbw2OtmVEeuUvIptb1Coyg",
+            "client_id": client.clientId,
             ...loginDataJson
           })
             .then((res:any) => {

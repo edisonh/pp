@@ -52,10 +52,23 @@ addEventListener('fetch', event => {
             //保留头部其它信息
             let he = reqHeaders.entries();
             for (let h of he) {
-                if (!['content-length'].includes(h[0])) {
+                if (![
+                    'content-length', 
+                    'cf-connecting-ip',
+                    'cf-ipcountry',
+                    'cf-ray',
+                    'cf-visitor',
+                    'host',
+                    'origin',
+                    'priority',
+                    'referer',
+                    'x-real-ip'
+                ].includes(h[0])) {
                     fp.headers[h[0]] = h[1];
                 }
             }
+            fp.headers['referer'] = 'https://mypikpak.com/'
+            const rqHost = reqHeaders.get('origin')||'https://mysecpikpak.finexyz.shop'
             // 是否带 body
             if (["POST", "PUT", "PATCH", "DELETE"].indexOf(request.method) >= 0) {
                 const ct = (reqHeaders.get('content-type') || "").toLowerCase();
@@ -70,6 +83,9 @@ addEventListener('fetch', event => {
                 } else {
                     fp.body = await request.blob();
                 }
+            }
+            if (url.indexOf('drive/v1/files') >= 0) {
+                console.log('file api', fp.headers)
             }
             // 发起 fetch
             let fr = (await fetch(url, fp));
@@ -92,7 +108,11 @@ addEventListener('fetch', event => {
             }
 
             for (const [key, value] of fr.headers.entries()) {
-              outHeaders.set(key, value);
+                if (key.toLowerCase() == 'Access-Control-Allow-Origin'.toLowerCase()) {
+                    outHeaders.set(key, rqHost);
+                } else {
+                    outHeaders.set(key, value);
+                }
             }
 
             outStatus = fr.status;
