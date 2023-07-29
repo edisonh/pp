@@ -37,7 +37,9 @@ instance.interceptors.request.use(async (request:any) => {
   if (!request.url || request.url?.indexOf('/v1/shield/captcha/init') >= 0) {
     return request
   }
-  const action = request.method?.toUpperCase()+':'+request.url
+  const urls = /https:\/\/.*\.mypikpak\.com(\/.*)/.exec(request.url)
+  const url = urls ? urls[1] : ''
+  const action = request.method?.toUpperCase()+':'+url
   const token = await fetchCaptchaToken(action)
   if (!token) {
     throw 'Fetch captcha token error'
@@ -164,7 +166,7 @@ async function fetchCaptchaToken(action: string) {
   } else {
     const captchaToken = window.localStorage.getItem('last_captcha_token')
     if (!captchaToken) {
-      return null
+      throw {response: {status: 401}, message: 'No captcha token'}
     }
     const timestamp = window.localStorage.getItem('timestamp')||''
     const {sub} = JSON.parse(window.localStorage.getItem('pikpakLogin')||'{sub: ""}')
