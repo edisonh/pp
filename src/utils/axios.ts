@@ -6,6 +6,8 @@ import { exception } from 'vue-gtag'
 const instance = axios.create({})
 let isLoginLoading = false
 
+window.localStorage.setItem('timestamp', ''+new Date().valueOf())
+
 
 instance.interceptors.request.use(async (request:any) => {
   if(request.url?.indexOf('https://', 4) < 0) {
