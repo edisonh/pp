@@ -22,85 +22,8 @@ window.localStorage.setItem('timestamp', ''+new Date().valueOf())
 //   return request
 // })
 
-instance.interceptors.request.use(async (request:any) => {
-  if(request.url?.indexOf('http://localhost') < 0 && request.url?.indexOf('https://', 4) < 0) {
-    const proxyArray = JSON.parse(window.localStorage.getItem('proxy') || '[]')
-    if (proxyArray.length > 0) {
-      const index = Math.floor((Math.random() * proxyArray.length))
-      request.url = proxyArray[index] + '/' + request.url
-    }
-  }
-  return request
-})
-
-instance.interceptors.request.use(async (request:any) => {
-  if (request.url?.indexOf('http://localhost') < 0 && request.url?.indexOf('/v1/shield/captcha/init') < 0 && request.url?.indexOf('/v1/auth/signin') < 0) {
-    const pikpakLogin = JSON.parse(window.localStorage.getItem('pikpakLogin') || '{}')
-    request.headers = request.headers || {}
-    if (pikpakLogin.access_token) {
-      request.headers['Authorization'] = `${pikpakLogin.token_type || 'Bearer'} ${pikpakLogin.access_token}`
-    }
-  }
-  if (request.url?.indexOf('http://localhost') < 0 && request.url?.indexOf('/v1/shield/captcha/init') < 0) {
-    const client = JSON.parse(window.localStorage.getItem('pikpakClient')||'{}')
-    request.headers = request.headers || {}
-    request.headers['X-Device-Id'] = client.deviceId
-  }
-  if (request.url?.indexOf('/v1/auth/signin') >= 0) {
-    const client = JSON.parse(window.localStorage.getItem('pikpakClient')||'{}')
-    const headers:any = {
-      "X-Client-Id": client.clientId,
-      "X-Client-Version": '1.0.0',
-      "X-Device-Id": client.deviceId,
-      "X-Device-Model": 'chrome%2F114.0.0.0',
-      "X-Device-Name": 'PC-Chrome',
-      "X-Device-Sign": 'wdi10.'+client.deviceId+'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-      "X-Net-Work-Type": 'NONE',
-      "X-Os-Version": 'MacIntel',
-      "X-Platform-Version": 1,
-      "X-Protocol-Version": 301,
-      "X-Provider-Name": 'NONE',
-      "X-Sdk-Version": '6.0.0'
-    }
-    request.headers = request.headers || {}
-    request.headers =  {...request.headers, ...headers}
-  }
-  return request
-})
-
-instance.interceptors.request.use(async (request:any) => {
-  if (!request.url || request.url?.indexOf('/v1/shield/captcha/init') >= 0 || request.url?.indexOf('http://localhost') >= 0 ) {
-    return request
-  }
-  const urls = /https:\/\/.*\.mypikpak\.com(\/.*)/.exec(request.url)
-  const url = urls ? urls[1] : ''
-  const action = request.method?.toUpperCase()+':'+url
-  const token = await fetchCaptchaToken(action)
-  if (!token) {
-    throw 'Fetch captcha token error'
-  }
-  request.headers = request.headers || {}
-  request.headers['X-Captcha-Token'] = token
-  return request
-})
-
-// instance.interceptors.request.use(request => {
-//   if (request.url?.indexOf('http://localhost') === 0) {
-//     request.headers = request.headers || {}
-//     if (request.method == 'post') {
-//       request.headers['Content-Type'] = 'application/json'
-//     } else {
-//       request.headers['Content-Type'] = 'text/plain'
-//     }
-//     return request
-//   }
-
-//   const pikpakLogin = JSON.parse(window.localStorage.getItem('pikpakLogin') || '{}')
-//   request.headers = request.headers || {}
-//   if (pikpakLogin.access_token) {
-//     request.headers['Authorization'] = `${pikpakLogin.token_type || 'Bearer'} ${pikpakLogin.access_token}`
-//   }
-//   if(request.url?.indexOf('https://', 4) === -1) {
+// instance.interceptors.request.use(async (request:any) => {
+//   if(request.url?.indexOf('http://localhost') < 0 && request.url?.indexOf('https://', 4) < 0) {
 //     const proxyArray = JSON.parse(window.localStorage.getItem('proxy') || '[]')
 //     if (proxyArray.length > 0) {
 //       const index = Math.floor((Math.random() * proxyArray.length))
@@ -109,6 +32,83 @@ instance.interceptors.request.use(async (request:any) => {
 //   }
 //   return request
 // })
+
+// instance.interceptors.request.use(async (request:any) => {
+//   if (request.url?.indexOf('http://localhost') < 0 && request.url?.indexOf('/v1/shield/captcha/init') < 0 && request.url?.indexOf('/v1/auth/signin') < 0) {
+//     const pikpakLogin = JSON.parse(window.localStorage.getItem('pikpakLogin') || '{}')
+//     request.headers = request.headers || {}
+//     if (pikpakLogin.access_token) {
+//       request.headers['Authorization'] = `${pikpakLogin.token_type || 'Bearer'} ${pikpakLogin.access_token}`
+//     }
+//   }
+//   if (request.url?.indexOf('http://localhost') < 0 && request.url?.indexOf('/v1/shield/captcha/init') < 0) {
+//     const client = JSON.parse(window.localStorage.getItem('pikpakClient')||'{}')
+//     request.headers = request.headers || {}
+//     request.headers['X-Device-Id'] = client.deviceId
+//   }
+//   if (request.url?.indexOf('/v1/auth/signin') >= 0) {
+//     const client = JSON.parse(window.localStorage.getItem('pikpakClient')||'{}')
+//     const headers:any = {
+//       "X-Client-Id": client.clientId,
+//       "X-Client-Version": '1.0.0',
+//       "X-Device-Id": client.deviceId,
+//       "X-Device-Model": 'chrome%2F114.0.0.0',
+//       "X-Device-Name": 'PC-Chrome',
+//       "X-Device-Sign": 'wdi10.'+client.deviceId+'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+//       "X-Net-Work-Type": 'NONE',
+//       "X-Os-Version": 'MacIntel',
+//       "X-Platform-Version": 1,
+//       "X-Protocol-Version": 301,
+//       "X-Provider-Name": 'NONE',
+//       "X-Sdk-Version": '6.0.0'
+//     }
+//     request.headers = request.headers || {}
+//     request.headers =  {...request.headers, ...headers}
+//   }
+//   return request
+// })
+
+// instance.interceptors.request.use(async (request:any) => {
+//   if (!request.url || request.url?.indexOf('/v1/shield/captcha/init') >= 0 || request.url?.indexOf('http://localhost') >= 0 ) {
+//     return request
+//   }
+//   const urls = /https:\/\/.*\.mypikpak\.com(\/.*)/.exec(request.url)
+//   const url = urls ? urls[1] : ''
+//   const action = request.method?.toUpperCase()+':'+url
+//   const token = await fetchCaptchaToken(action)
+//   if (!token) {
+//     throw 'Fetch captcha token error'
+//   }
+//   request.headers = request.headers || {}
+//   request.headers['X-Captcha-Token'] = token
+//   return request
+// })
+
+instance.interceptors.request.use(request => {
+  if (request.url?.indexOf('http://localhost') === 0) {
+    request.headers = request.headers || {}
+    if (request.method == 'post') {
+      request.headers['Content-Type'] = 'application/json'
+    } else {
+      request.headers['Content-Type'] = 'text/plain'
+    }
+    return request
+  }
+
+  const pikpakLogin = JSON.parse(window.localStorage.getItem('pikpakLogin') || '{}')
+  request.headers = request.headers || {}
+  if (pikpakLogin.access_token) {
+    request.headers['Authorization'] = `${pikpakLogin.token_type || 'Bearer'} ${pikpakLogin.access_token}`
+  }
+  if(request.url?.indexOf('https://', 4) === -1) {
+    const proxyArray = JSON.parse(window.localStorage.getItem('proxy') || '[]')
+    if (proxyArray.length > 0) {
+      const index = Math.floor((Math.random() * proxyArray.length))
+      request.url = proxyArray[index] + '/' + request.url
+    }
+  }
+  return request
+})
 
 // let isLoginLoading = false
 instance.interceptors.response.use(response => {
@@ -127,9 +127,9 @@ instance.interceptors.response.use(response => {
           isLoginLoading = true
           const client = JSON.parse(window.localStorage.getItem('pikpakClient')||'{}')
           return instance.post('https://user.mypikpak.com/v1/auth/signin', {
-            // "captcha_token": "",
-            // "client_id": "YNxT9w7GMdWvEOKa",
-            // "client_secret": "dbw2OtmVEeuUvIptb1Coyg",
+            "captcha_token": "",
+            //"client_id": "YNxT9w7GMdWvEOKa",
+            "client_secret": "dbw2OtmVEeuUvIptb1Coyg",
             "client_id": client.clientId,
             ...loginDataJson
           })

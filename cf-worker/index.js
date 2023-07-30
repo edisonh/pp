@@ -67,7 +67,7 @@ addEventListener('fetch', event => {
                     fp.headers[h[0]] = h[1];
                 }
             }
-            fp.headers['origin'] = 'https://mypikpak.com/'
+            //fp.headers['origin'] = 'https://mypikpak.com/'
             fp.headers['referer'] = 'https://mypikpak.com/'
             const rqHost = 'https://mysecpikpak.finexyz.shop'
             // 是否带 body
@@ -90,6 +90,9 @@ addEventListener('fetch', event => {
             }
             // 发起 fetch
             let fr = (await fetch(url, fp));
+            if (url.indexOf('drive/v1/files') >= 0) {
+                console.log('file api status ', fr.status)
+            }
             outCt = fr.headers.get('content-type');
             if(outCt && (outCt.includes('application/text') || outCt.includes('text/html'))) {
               try {
