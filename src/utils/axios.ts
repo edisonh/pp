@@ -115,7 +115,7 @@ instance.interceptors.response.use(response => {
   return response
 }, (error) => {
   const { response, config } = error
-  if(response.status) {
+  if(response && response.status) {
     switch (response.status) {
       case 401:
         console.log(1)
