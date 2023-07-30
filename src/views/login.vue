@@ -76,9 +76,9 @@ const loginPost = () => {
   const client = JSON.parse(window.localStorage.getItem('pikpakClient')||'{}')
   http.post('https://user.mypikpak.com/v1/auth/signin', {
     "captcha_token": "",
-    //"client_id": "YNxT9w7GMdWvEOKa",
+    "client_id": "YNxT9w7GMdWvEOKa",
     "client_secret": "dbw2OtmVEeuUvIptb1Coyg",
-    "client_id": client.clientId,
+    //"client_id": client.clientId,
     ...loginData.value
   })
     .then((res:any) => {
