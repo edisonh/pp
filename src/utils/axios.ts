@@ -112,6 +112,41 @@ instance.interceptors.request.use(request => {
 
 // let isLoginLoading = false
 instance.interceptors.response.use(response => {
+  if (response && response.data) {
+    const data: any = response.data
+    if (data?.error == 'unauthenticated') {
+      const loginData = window.localStorage.getItem('pikpakLoginData')
+      const loginDataJson = loginData ? JSON.parse(loginData) : {}
+      if (loginDataJson.username && loginDataJson.password && !isLoginLoading) {
+        isLoginLoading = true
+        const client = JSON.parse(window.localStorage.getItem('pikpakClient') || '{}')
+        instance.post('https://user.mypikpak.com/v1/auth/signin', {
+          "captcha_token": "",
+          "client_id": "YNxT9w7GMdWvEOKa",
+          "client_secret": "dbw2OtmVEeuUvIptb1Coyg",
+          ...loginDataJson
+        })
+          .then((res: any) => {
+            if (res.data && res.data.access_token) {
+              window.localStorage.setItem('pikpakLogin', JSON.stringify(res.data))
+            }
+            isLoginLoading = false
+          })
+          .catch(() => {
+            router.push('/login')
+            return false
+          })
+      } else if (loginDataJson.username && loginDataJson.password && isLoginLoading) {
+        const s = setInterval(() => {
+          if (!isLoginLoading) {
+            clearInterval(s)
+          }
+        }, 100)
+      } else {
+        router.push('/login?redirect=' + router.currentRoute.value.fullPath)
+      }
+    }
+  }
   return response
 }, (error) => {
   const { response, config } = error
