@@ -550,6 +550,7 @@ import axios from 'axios';
         filters: filters
       },
       transformResponse: [(data) => {
+        console.log('transformResponse', data)
         return data
       }]
     })
