@@ -548,11 +548,7 @@ import axios from 'axios';
         page_token: pageToken.value || undefined,
         limit: 100,
         filters: filters
-      },
-      transformResponse: [(data) => {
-        console.log('transformResponse', data)
-        return data
-      }]
+      }
     })
       .then(async (res:any) => {
         const {data} = res
