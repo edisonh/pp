@@ -388,12 +388,12 @@ const deepScan = async (parentIds: string[]) => {
 
 const notify = async (msg: string) => {
   if (notificationRef.value) {
-    notificationRef.value.destroy()
+    try {
+      notificationRef.value.destroy()
+    } catch(e) {
+    }
   }
-  notificationRef.value = notification.info({title: msg, onClose: () => {
-    notificationRef.value?.destroy()
-    return false
-  }})
+  notificationRef.value = notification.info({title: msg})
 }
 
 const scanAllFiles = async () => {
