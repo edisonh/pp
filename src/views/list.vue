@@ -941,7 +941,8 @@ import axios from 'axios';
       nRef.value = notification.create({
         title: '自动选择视频',
         closable: true,
-        content: '正在获取文件列表...'
+        content: '正在获取文件列表...',
+        onClose: () => { nRef.value!.content = ''}
       })
     } else {
       nRef.value.content = '正在获取文件列表...'
@@ -1011,7 +1012,8 @@ import axios from 'axios';
       nRef.value = notification.create({
         title: '批量下载文件',
         closable: true,
-        content: '正在获取文件列表...'
+        content: '正在获取文件列表...',
+        onClose: () => { nRef.value!.content = ''}
       })
     } else {
       nRef.value.content = '正在获取文件列表...'
@@ -1064,7 +1066,8 @@ import axios from 'axios';
       nRef.value = notification.create({
         title: '批量下载文件',
         closable: true,
-        content: '正在获取文件列表...'
+        content: '正在获取文件列表...',
+        onClose: () => { nRef.value!.content = ''}
       })
     } else {
       nRef.value.content = '正在获取文件列表...'
