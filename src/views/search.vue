@@ -18,6 +18,9 @@
           <n-button type="default" v-if="moveFiles?.length">
             粘贴已剪切{{moveFiles.length}}项资源
           </n-button>
+          <n-button  @click="scanUndownloaded">
+            检查未下载文件
+          </n-button>
           <n-button  @click="scanRedundancy">
             检查重复文件
           </n-button>
@@ -335,6 +338,11 @@ const getRedundancyFiles = async () => {
   return res.data
 }
 
+const getUndownloadedFiles = async () => {
+  const res: any = await http.get(`${LOCAL_SERVER_URL}/files/undownloaded`)
+  return res.data
+}
+
 const deleteFileRecords = async (ids: string[]) => {
   await http.get(`${LOCAL_SERVER_URL}/delete/files/${ids.join(',')}`)
 }
@@ -405,6 +413,11 @@ const scanAllFiles = async () => {
   } catch(e) {
     notify('扫描出错: '+e)
   }
+}
+
+const scanUndownloaded = async () => {
+  filesList.value = await getUndownloadedFiles();
+  lastAction = getUndownloadedFiles 
 }
 
 </script>
