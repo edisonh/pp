@@ -24,7 +24,9 @@
           <n-button  @click="scanRedundancy">
             检查重复文件
           </n-button>
-          
+          <n-button  @click="scanDeleted">
+            检查已删除文件
+          </n-button>
           <n-popconfirm @positive-click="scanAllFiles" >
             <template #trigger>
               <n-button>重新扫描</n-button>
@@ -343,6 +345,11 @@ const getUndownloadedFiles = async () => {
   return res.data
 }
 
+const getDeletedFiles = async () => {
+  const res: any = await http.get(`${LOCAL_SERVER_URL}/files/deleted`)
+  return res.data
+} 
+
 const deleteFileRecords = async (ids: string[]) => {
   await http.get(`${LOCAL_SERVER_URL}/delete/files/${ids.join(',')}`)
 }
@@ -418,6 +425,11 @@ const scanAllFiles = async () => {
 const scanUndownloaded = async () => {
   filesList.value = await getUndownloadedFiles();
   lastAction = getUndownloadedFiles 
+}
+
+const scanDeleted = async () => {
+  filesList.value = await getDeletedFiles();
+  lastAction = getDeletedFiles 
 }
 
 </script>
