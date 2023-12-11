@@ -12,7 +12,7 @@
       bordered
     >
       <a href="https://mypikpak.com/" target="_blank" class="logo-box">
-       <img src="https://mypikpak.com/apple-touch-icon.png" class="logo-box__icon" alt="">
+       <img src="../../assets/apple-touch-icon.png" class="logo-box__icon" alt="">
         <div class="logo-box__text">PikPak</div>
       </a>
       <n-menu :options="menuOptions" :value="String(route.name)" @update:value="goRoute"></n-menu>
@@ -39,7 +39,7 @@
       <div class="sider-bottom" v-if="!collapsed" :class="{vip: vipInfo?.status === 'ok'}">
         <div class="bottom-user-info">
           <img src="../../assets/logo1.png" class="user-info-avatar" v-if="vipInfo?.status === 'ok'">
-          <img src="https://www.mypikpak.com/logo.png" v-else class="user-info-avatar">
+          <!-- <img src="https://www.mypikpak.com/logo.png" v-else class="user-info-avatar"> -->
           <div class="user-info-name">
             {{userInfo?.name}}
             <div v-if="vipInfo?.status === 'ok' && vipInfo?.expire">
