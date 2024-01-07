@@ -142,7 +142,7 @@ const columns = ref<DataTableColumns>([
               target: '_blank',
               href: row.exist.url,
               onClick: withModifiers(() => { }, ['stop'])
-            }, [row.exist.filename, h('span', { style: 'color:red' }, row.exist.size)])
+            }, [row.exist.filename])
           ]
           // {
           //   default: () => String(row.name)
@@ -427,8 +427,15 @@ const scanUndownloaded = async () => {
   lastAction = getUndownloadedFiles 
 }
 
+const getLocalFileUrl = (name:string) => {
+  return `http://localhost:3000/xvideo/search/vid/${encodeURIComponent(name)}`
+}
+
 const scanDeleted = async () => {
-  filesList.value = await getDeletedFiles();
+  let files = await getDeletedFiles();
+  //@ts-ignore
+  files = files.map(f => ({...f, exist: {filename: f.name, url: getLocalFileUrl(f.name)}})); 
+  filesList.value = files;
   lastAction = getDeletedFiles 
 }
 
