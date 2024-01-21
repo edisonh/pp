@@ -27,6 +27,9 @@
           <n-button  @click="scanDeleted">
             检查已删除文件
           </n-button>
+          <n-button  @click="scanLarge">
+            检查大文件
+          </n-button>
           <n-popconfirm @positive-click="scanAllFiles" >
             <template #trigger>
               <n-button>重新扫描</n-button>
@@ -348,6 +351,11 @@ const getUndownloadedFiles = async () => {
 const getDeletedFiles = async () => {
   const res: any = await http.get(`${LOCAL_SERVER_URL}/files/deleted`)
   return res.data
+}
+
+const getLargeFiles = async () => {
+  const res: any = await http.get(`${LOCAL_SERVER_URL}/files/large`)
+  return res.data
 } 
 
 const deleteFileRecords = async (ids: string[]) => {
@@ -437,6 +445,12 @@ const scanDeleted = async () => {
   files = files.map(f => ({...f, exist: {filename: f.name, url: getLocalFileUrl(f.name)}})); 
   filesList.value = files;
   lastAction = getDeletedFiles 
+}
+
+const scanLarge = async () => {
+  let files = await getLargeFiles();
+  filesList.value = files
+  lastAction = getLargeFiles
 }
 
 </script>
