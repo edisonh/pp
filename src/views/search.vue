@@ -431,7 +431,10 @@ const scanAllFiles = async () => {
 }
 
 const scanUndownloaded = async () => {
-  filesList.value = await getUndownloadedFiles();
+  let files = await getUndownloadedFiles();
+  //@ts-ignore
+  files = files.map(f => ({...f, exist: {filename: f.name, url: getLocalFileUrl(f.name)}}));
+  filesList.value = files;
   lastAction = getUndownloadedFiles 
 }
 
@@ -449,7 +452,9 @@ const scanDeleted = async () => {
 
 const scanLarge = async () => {
   let files = await getLargeFiles();
-  filesList.value = files
+  //@ts-ignore
+  files = files.map(f => ({...f, exist: {filename: f.name, url: getLocalFileUrl(f.name)}})); 
+  filesList.value = files;
   lastAction = getLargeFiles
 }
 
