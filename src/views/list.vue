@@ -568,7 +568,7 @@ import axios from 'axios';
         const files = []
         for (let i =0 ; i < data.files.length; i++) {
           const lf = await findFileById(data.files[i].id)
-          files.push({...data.files[i], scanned: lf ? lf.scanned : false})
+          files.push({...data.files[i], scanned: lf ? lf.scanned : false, size: lf && lf.kind == "drive#folder" ? lf.size : data.files[i].size})
         }
         filesList.value = filesList.value.concat(files)
         pageToken.value = data.next_page_token
