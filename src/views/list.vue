@@ -397,6 +397,12 @@ import axios from 'axios';
         default: () => [
           !samllPage.value && h(NText, {
             type: 'primary',
+            onClick: () => copyCdnUrl(row.id)
+          }, {
+            default: () => '复制下载链接'
+          }),
+          !samllPage.value && h(NText, {
+            type: 'primary',
             onClick: () => nameModelSHow(row)
           }, {
             default: () => '重命名'
@@ -1024,7 +1030,25 @@ import axios from 'axios';
     sendDownloadMsg(selectedFiles)
 }
 
+const getFileInfo = async (id: string) => {
+  const res: any = await http.get('https://api-drive.mypikpak.com/drive/v1/files/' + id, {
+    params: {
+      _magic: '2021',
+      thumbnail_size: 'SIZE_LARGE'
+    }
+  })
+  return res
+}
 
+const copyCdnUrl = async (id:string) => {
+  const res:any = await getFileInfo(id)
+  if (navigator.clipboard) {
+      navigator.clipboard.writeText(res.data.web_content_link);
+      window.$message.success('复制下载链接成功')
+  } else {
+    window.$message.error('浏览器不支持clipboard api')
+  }
+}
 
   const downloadAll = async () => {
 
