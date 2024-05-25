@@ -68,21 +68,21 @@ window.localStorage.setItem('timestamp', ''+new Date().valueOf())
 //   return request
 // })
 
-// instance.interceptors.request.use(async (request:any) => {
-//   if (!request.url || request.url?.indexOf('/v1/shield/captcha/init') >= 0 || request.url?.indexOf('http://localhost') >= 0 ) {
-//     return request
-//   }
-//   const urls = /https:\/\/.*\.mypikpak\.com(\/.*)/.exec(request.url)
-//   const url = urls ? urls[1] : ''
-//   const action = request.method?.toUpperCase()+':'+url
-//   const token = await fetchCaptchaToken(action)
-//   if (!token) {
-//     throw 'Fetch captcha token error'
-//   }
-//   request.headers = request.headers || {}
-//   request.headers['X-Captcha-Token'] = token
-//   return request
-// })
+instance.interceptors.request.use(async (request:any) => {
+  if (!request.url || request.url?.indexOf('/v1/shield/captcha/init') >= 0 || (request.url?.indexOf('http://localhost') >= 0 && request.url?.indexOf('http://localhost:3001') < 0) ) {
+    return request
+  }
+  const urls = /https:\/\/.*\.mypikpak\.com(\/.*)/.exec(request.url)
+  const url = urls ? urls[1] : ''
+  const action = request.method?.toUpperCase()+':'+url
+  const token = await fetchCaptchaToken(action)
+  if (!token) {
+    throw 'Fetch captcha token error'
+  }
+  request.headers = request.headers || {}
+  request.headers['X-Captcha-Token'] = token
+  return request
+})
 
 instance.interceptors.request.use(request => {
   if (request.url?.indexOf('http://localhost') === 0) {
@@ -121,7 +121,7 @@ instance.interceptors.response.use(response => {
         isLoginLoading = true
         const client = JSON.parse(window.localStorage.getItem('pikpakClient') || '{}')
         instance.post('https://user.mypikpak.com/v1/auth/signin', {
-          //"captcha_token": "",
+          "captcha_token": "",
           "client_id": "YNxT9w7GMdWvEOKa",
           "client_secret": "dbw2OtmVEeuUvIptb1Coyg",
           ...loginDataJson
