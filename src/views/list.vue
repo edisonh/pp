@@ -460,7 +460,7 @@ import axios from 'axios';
                   downFile(row.id)
                   break
                 case 'copyDown':
-                  getFile(row.id)
+                  getDownloadFile(row.id)
                     .then((res:any) => {
                       fileInfo.value = res.data
                       showCopy.value = true
@@ -641,6 +641,18 @@ import axios from 'axios';
       params: {
         _magic: '2021',
         thumbnail_size: 'SIZE_LARGE'
+      }
+    })
+      .then(res => {
+        return res
+      })
+  }
+  const getDownloadFile = (id:string) => {
+    return http.get('https://api-drive.mypikpak.com/drive/v1/files/' + id, {
+      params: {
+        usage: 'FETCH'
+        //_magic: '2021',
+        //thumbnail_size: 'SIZE_LARGE'
       }
     })
       .then(res => {
@@ -983,8 +995,9 @@ import axios from 'axios';
     const getFileInfo = async (id:string) => {
       const res:any = await http.get('https://api-drive.mypikpak.com/drive/v1/files/' + id, {
         params: {
-          _magic: '2021',
-          thumbnail_size: 'SIZE_LARGE'
+          usage: 'FETCH'
+          //_magic: '2021',
+          //thumbnail_size: 'SIZE_LARGE'
         }
       })
       return res
@@ -1055,8 +1068,9 @@ const copyCdnUrl = async (id:string) => {
     const getFileInfo = async (id:string) => {
       const res:any = await http.get('https://api-drive.mypikpak.com/drive/v1/files/' + id, {
         params: {
-          _magic: '2021',
-          thumbnail_size: 'SIZE_LARGE'
+          usage: 'FETCH'
+          //_magic: '2021',
+          //thumbnail_size: 'SIZE_LARGE'
         }
       })
       return res
