@@ -403,6 +403,38 @@ import axios from 'axios';
           }),
           !samllPage.value && h(NText, {
             type: 'primary',
+            onClick: () => {
+              dialog.warning({
+                title: '警告',
+                content: '确定删除' + row.name + '？',
+                positiveText: '确定',
+                negativeText: '不确定',
+                onPositiveClick: () => {
+                  deleteAndMark(row.id, row.kind, row.name, row.size, true)
+                }
+              })
+            } 
+          }, {
+            default: () => '删除不好看'
+          }),
+          !samllPage.value && h(NText, {
+            type: 'primary',
+            onClick: () => {
+              dialog.warning({
+                title: '警告',
+                content: '确定删除' + row.name + '？',
+                positiveText: '确定',
+                negativeText: '不确定',
+                onPositiveClick: () => {
+                  deleteAndMark(row.id, row.kind, row.name, row.size, false)
+                }
+              })
+            }
+          }, {
+            default: () => '删除低质量'
+          }),
+          !samllPage.value && h(NText, {
+            type: 'primary',
             onClick: () => nameModelSHow(row)
           }, {
             default: () => '重命名'
@@ -1062,6 +1094,58 @@ const copyCdnUrl = async (id:string) => {
     window.$message.error('浏览器不支持clipboard api')
   }
 }
+
+const deleteAndBlock = async (filename: string, size:number, block: boolean) => {
+    await http.get(`${localserverUrl}/fileindex/del_and_block?filename=${filename}&size=${size}&block=${block}`)
+}
+
+const getFilesOfFolder = async (id: string) => {
+  const res: any = await http.get('https://api-drive.mypikpak.com/drive/v1/files', {
+    params: {
+      parent_id: id || undefined,
+      thumbnail_size: 'SIZE_LARGE',
+      with_audit: true,
+      page_token: '',
+      filters: {
+        "phase": { "eq": "PHASE_TYPE_COMPLETE" },
+        "trashed": { "eq": false }
+      }
+    }
+  })
+  return res.data.files
+}
+
+const getPrimaryInFolder = async (id: string) => {
+  const files = await getFilesOfFolder(id)
+  const primaryFiles = []
+  for (let i in files) {
+    if (files[i].kind === 'drive#file') {
+      const size = Number(files[i].size)
+      if (size / 1024 / 1024 > 500) {
+        primaryFiles.push(files[i])
+      }
+    }
+  }
+  return primaryFiles
+}
+
+const deleteAndMark = async (id:string, kind:string, name:string, size:number, block: boolean) => {
+  
+  let filename = name
+  let filesize = size
+  if (kind === 'drive#folder') {
+    const files = await getPrimaryInFolder(id)
+    if (!files || files.length <= 0) {
+      return
+    }
+    filename = files[0].name
+    filesize = files[0].size
+  }
+
+  await deleteAndBlock(filename, filesize, block)
+  deleteFile(id)
+}
+
 
   const downloadAll = async () => {
 
