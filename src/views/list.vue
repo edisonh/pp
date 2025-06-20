@@ -568,8 +568,13 @@ import axios from 'axios';
   ])
 
   const findFileById = async (id: string) => {
-    const res: any = await http.get(`http://localhost:3000/pikpak/file/${id}`)
-    return res.data
+    try {
+      const res: any = await http.get(`http://localhost:3000/pikpak/file/${id}`)
+      return res.data
+    } catch (e) {
+      console.error('Error finding file by ID:', e);
+      return null
+    }
   }
 
   const loading = ref(false)
