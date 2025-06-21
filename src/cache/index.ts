@@ -28,7 +28,7 @@ export async function getPikFile(id: string) {
             if (res.ok) {
                 const locals = await res.json()
                 for (let local of locals) {
-                    localMap.set(local.id, local)
+                    localMap.set(local.id+'', local)
                 }
             }
         }
