@@ -610,7 +610,7 @@ const addPikFileToMyyun = async (pik: any) => {
 
 const handlePikFile = async (file: any) => {
   try {
-    if (file.kind !== 'drive#file') {
+    if (file.kind !== 'drive#file' || file.size < 1024*1024*100) {
       return; // Skip non-file items
     }
     let pik = await getPikFile(file.id)
