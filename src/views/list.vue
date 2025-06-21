@@ -610,6 +610,9 @@ const addPikFileToMyyun = async (pik: any) => {
 
 const handlePikFile = async (file: any) => {
   try {
+    if (file.kind !== 'drive#file') {
+      return; // Skip non-file items
+    }
     let pik = await getPikFile(file.id)
     if (!pik) {
       const hash = getMagnetHash(file.params)
