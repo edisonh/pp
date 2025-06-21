@@ -573,7 +573,7 @@ import {getPikFile} from '../cache'
       const res: any = await http.get(`http://localhost:3000/pikpak/file/${id}`)
       return res.data
     } catch (e) {
-      console.error('Error finding file by ID:', e);
+      //console.error('Error finding file by ID:', e);
       return null
     }
   }
@@ -786,7 +786,11 @@ import {getPikFile} from '../cache'
     })
   }
   const deleteFileRecords = async (ids: string[]) => {
-    await http.get(`http://localhost:3000/pikpak/delete/files/${ids.join(',')}`)
+    try {
+      await http.get(`http://localhost:3000/pikpak/delete/files/${ids.join(',')}`)
+    } catch (error) {
+      console.error('Error deleting file records:', error);
+    }
   }
   const deleteFile = (id:string | string[]) => {
     http.post('https://api-drive.mypikpak.com/drive/v1/files:batchTrash', {
@@ -1111,7 +1115,12 @@ const copyCdnUrl = async (id:string) => {
 }
 
 const deleteAndBlock = async (filename: string, size:number, block: boolean) => {
+  try {
     await http.get(`${localserverUrl}/fileindex/del_and_block?filename=${filename}&size=${size}&block=${block}`)
+  } catch (error) {
+    console.error('Error deleting and blocking file:', error);
+    window.$message.error('删除失败，请稍后再试')
+  }
 }
 
 const getFilesOfFolder = async (id: string) => {
@@ -1642,7 +1651,11 @@ const deleteAndMark = async (id:string, kind:string, name:string, size:number, b
   const setScannable = async (id:string | string[]) => {
     const ids = typeof id === 'string' ? [id] : id
     for (let i = 0; i < ids.length; i++) {
-      await http.get(`http://localhost:3000/pikpak/file/toscan/${ids[i]}`)
+      try {
+        await http.get(`http://localhost:3000/pikpak/file/toscan/${ids[i]}`)
+      } catch (error) {
+        console.error(`Error setting file ${ids[i]} to scannable:`, error);
+      }
     }
     window.$message.success('设置成功')
   }
