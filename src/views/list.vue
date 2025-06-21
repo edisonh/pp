@@ -287,7 +287,7 @@ import ClipboardJS from 'clipboard'
 import streamSaver from 'streamsaver'
 import { DropdownMixedOption } from 'naive-ui/lib/dropdown/src/interface'
 import axios from 'axios';
-import {getPikFile} from '../cache'
+import {getPikFile, getSaving} from '../cache'
   const filesList = ref()
   const route = useRoute()
   const router = useRouter()
@@ -578,6 +578,55 @@ import {getPikFile} from '../cache'
     }
   }
 
+  const getMagnetHash = (params: any) => {
+    if (params && params.url) {
+      const magnet = params.url;
+      const hashMatch = magnet.match(/btih:([a-z0-9]{40,})/i);
+      if (hashMatch && hashMatch.length > 1) {
+        return hashMatch[1].toUpperCase();
+      }
+    }
+    return null;
+  }
+
+const addPikFileToMyyun = async (pik: any) => {
+  try {
+    const baseUrl = window.location.origin.replace(/:\/\/.*?\./, '://myyun.')
+    const token = window.localStorage.getItem('myyun_token')
+    if (!token) {
+      throw new Error('Myyun token not found');
+    }
+    await fetch(`${baseUrl}/xvideo/api/pik/files/add`, {
+      method: 'POST',
+      body: JSON.stringify([pik]),
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  } catch (error) {
+    console.error('Error adding PikPak file to Myyun:', error);
+  }
+}
+
+const handlePikFile = async (file: any) => {
+  try {
+    let pik = await getPikFile(file.id)
+    if (!pik) {
+      const hash = getMagnetHash(file.params)
+      pik = { id: file.id, name: file.name, size: file.size, magnet: hash, hash: file.hash }
+      const savings = await getSaving(hash)
+      const matches = savings.filter((s: any) => file.name.toUpperCase().includes(s.vid))
+      if (matches.length > 0) {
+        pik.orgId = matches[0].id
+      }
+      console.log('add pik to myyun', pik)
+      //await addPikFileToMyyun(pik)
+    }
+  } catch (error) {
+    console.error('Error handling PikPak file:', error);
+  }
+}
+
   const loading = ref(false)
   const pageToken = ref()
   const getFileList = () => {
@@ -611,6 +660,7 @@ import {getPikFile} from '../cache'
         }
         const files = []
         for (let i =0 ; i < data.files.length; i++) {
+          await handlePikFile(data.files[i])
           const lf = await findFileById(data.files[i].id)
           files.push({...data.files[i], scanned: lf ? lf.scanned : true, size: lf && lf.kind == "drive#folder" ? lf.size : data.files[i].size})
         }
