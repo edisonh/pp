@@ -622,8 +622,8 @@ const handlePikFile = async (file: any) => {
       if (matches.length > 0) {
         pik.orgId = matches[0].id
       }
-      console.log('add pik to myyun', pik)
-      //await addPikFileToMyyun(pik)
+      //console.log('add pik to myyun', pik)
+      await addPikFileToMyyun(pik)
     }
   } catch (error) {
     console.error('Error handling PikPak file:', error);
