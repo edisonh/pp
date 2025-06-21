@@ -36,7 +36,7 @@ export async function getPikFile(id: string) {
         if (!pik) {
         return null
         }
-        const localSizes = pik.localIds && pik.localIds.map((id:string) => localMap.get(id)?.size || 1)
+        const localSizes = pik.localIds && pik.localIds.split(',').map((id:string) => localMap.get(id)?.size || 1)
         return {...pik, localSizes}
     } catch (e) {
         console.error('Error fetching pik files:', e)
