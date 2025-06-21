@@ -287,6 +287,7 @@ import ClipboardJS from 'clipboard'
 import streamSaver from 'streamsaver'
 import { DropdownMixedOption } from 'naive-ui/lib/dropdown/src/interface'
 import axios from 'axios';
+import {getPikFile} from '../cache'
   const filesList = ref()
   const route = useRoute()
   const router = useRouter()
@@ -611,7 +612,7 @@ import axios from 'axios';
         const files = []
         for (let i =0 ; i < data.files.length; i++) {
           const lf = await findFileById(data.files[i].id)
-          files.push({...data.files[i], scanned: lf ? lf.scanned : false, size: lf && lf.kind == "drive#folder" ? lf.size : data.files[i].size})
+          files.push({...data.files[i], scanned: lf ? lf.scanned : true, size: lf && lf.kind == "drive#folder" ? lf.size : data.files[i].size})
         }
         filesList.value = filesList.value.concat(files)
         pageToken.value = data.next_page_token
@@ -964,16 +965,25 @@ import axios from 'axios';
     
 
     const getDownloadedFiles = async (name:string) => {
-      const res:any = await http.get(`${localserverUrl}/files/${encodeURIComponent(name)}`)
-      return res.data
+      try {
+        const res:any = await http.get(`${localserverUrl}/files/${encodeURIComponent(name)}`)
+        return res.data
+      } catch (e) {
+        //console.error('Error fetching downloaded files:', e);
+        return null
+      }
     }
 
     const getLocalFileUrl = (name:string) => {
       return `${localserverUrl}/search/vid/${encodeURIComponent(name)}`
     }
 
-    const getExistInfo = async (filename:string, size:number) => {
-      const files:Array<any> = await getDownloadedFiles(filename)
+    const getExistInfo = async (id:string, filename:string, size:number) => {
+      let files:Array<any> = await getDownloadedFiles(filename)
+      if (!files || files.length === 0) {
+        const pik = await getPikFile(id)
+        files = pik && pik.localSizes && pik.localSizes.map((s:number) => ({full_match: pik.downloaded, size: s, name: pik.name})) || []
+      }
       const url = getLocalFileUrl(filename)
       const existSize = files.map((f:any) => (f.full_match ? 'match:' : '') + byteConvert(Number(f.size)) + (f.name=='delete' ? '-DEL' : '')).toString()
       let exist = false
@@ -1007,14 +1017,14 @@ import axios from 'axios';
     checkedRowKeys.value = []
     for(let i in filesList.value) {
       if (filesList.value[i].kind === 'drive#file') {
-        const info = await getExistInfo(filesList.value[i].name, Number(filesList.value[i].size))
+        const info = await getExistInfo(filesList.value[i].id, filesList.value[i].name, Number(filesList.value[i].size))
         filesList.value[i].exist = info
         if (!info.exist) {
           checkedRowKeys.value.push(filesList.value[i].id)
         }
       } else if (filesList.value[i].kind === 'drive#folder' && filesList.value[i].children) {
         for (let j in filesList.value[i].children) {
-          const info = await getExistInfo(filesList.value[i].children[j].name, Number(filesList.value[i].children[j].size))
+          const info = await getExistInfo(filesList.value[i].id, filesList.value[i].children[j].name, Number(filesList.value[i].children[j].size))
           filesList.value[i].children[j].exist = info
           if (!info.exist) {
             checkedRowKeys.value.push(filesList.value[i].children[j].id)
