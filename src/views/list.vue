@@ -1147,7 +1147,7 @@ const handlePikFile = async (file: any) => {
 
     const sendDownloadMsg = (items:any) => {
       //const extensionId = "chrome_extension_id"; // 插件ID
-      const extensionId = window.localStorage.getItem('chrome_extension_id') || null
+      const extensionId = window.localStorage.getItem('chrome_ext_id') || null
       if (!extensionId) {
         window.$message.error('请先设置Chrome插件ID')
         return

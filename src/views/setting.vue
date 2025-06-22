@@ -206,7 +206,7 @@ const otherSubmit = () => {
   btCometUrl && window.localStorage.setItem('bitcomet_url', btCometUrl)
   btCometAuth && window.localStorage.setItem('bitcomet_auth', btCometAuth)
   downloadDir && window.localStorage.setItem('download_dir', downloadDir)
-  chromeExtensionId && window.localStorage.setItem('chrome_extension_id', chromeExtensionId)
+  chromeExtensionId && window.localStorage.setItem('chrome_ext_id', chromeExtensionId)
   window.$message.success('保存成功')
 }
 
@@ -231,7 +231,7 @@ onMounted(() => {
   const btCometUrl = window.localStorage.getItem('bitcomet_url') || ''
   const downloadDir = window.localStorage.getItem('download_dir') || ''
   const btCometAuth = window.localStorage.getItem('bitcomet_auth') || ''
-  const chromeExtensionId = window.localStorage.getItem('chrome_extension_id') || ''
+  const chromeExtensionId = window.localStorage.getItem('chrome_ext_id') || ''
   other.value = {
     myyunToken,
     btCometUrl,
