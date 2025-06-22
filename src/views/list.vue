@@ -1202,8 +1202,8 @@ const handlePikFile = async (file: any) => {
     const selectedFiles = await getSelectedFiles()
     checkedRowKeys.value = []
     nRef.value.content = '共获取到' + selectedFiles.length + '个文件'
-    //sendDownloadMsg(selectedFiles)
-    downloadByBitComet(selectedFiles)
+    sendDownloadMsg(selectedFiles)
+    //downloadByBitComet(selectedFiles)
 }
 
 const getFileInfo = async (id: string) => {
