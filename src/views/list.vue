@@ -1059,7 +1059,7 @@ const handlePikFile = async (file: any) => {
       if (!files || files.length === 0) {
         const pik = await getPikFile(id)
         files = pik && pik.localSizes && pik.localSizes.map((s:number) => ({full_match: pik.downloaded, size: s, name: pik.name})) || []
-        if (pik.downloaded == 2) files = files.concat([{downloading: true, size: 0}]) // 添加一个删除标记
+        if (pik && pik.downloaded == 2) files = files.concat([{downloading: true, size: 0}]) // 添加一个删除标记
       }
       const url = getLocalFileUrl(filename)
       const existSize = files.map((f:any) => f.downloading ? '下载中...' : (f.full_match ? 'match:' : '') + byteConvert(Number(f.size)) + (f.name=='delete' ? '-DEL' : '')).toString()
