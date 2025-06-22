@@ -171,9 +171,11 @@ import { useRoute, useRouter } from 'vue-router'
     router.push('/' + item.key)
   }
   onMounted(() => {
-    getUserInfo()
-    getAbout()
-    getVip()
+    if (route && route.name && route.name !== 'setting') {
+      getUserInfo()
+      getAbout()
+      getVip()
+    }
   })
   const code = ref()
   const showCode = ref(false)

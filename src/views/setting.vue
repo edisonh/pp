@@ -61,6 +61,22 @@
         <n-button type="primary" @click="proxyPost">保存设置</n-button>
         <n-text @click="proxyReset">恢复默认</n-text>
       </n-collapse-item>
+      <n-collapse-item name="ext" title="其他设置">
+        <n-form label-width="100px" label-align="left" label-placement="left">
+          <n-form-item label="myyun token">
+            <n-switch v-model:value="other.myyunToken"></n-switch>
+          </n-form-item>
+          <n-form-item label="btComet url">
+            <n-switch v-model:value="other.btCometUrl"></n-switch>
+          </n-form-item>
+          <n-form-item label="下载目录">
+            <n-switch v-model:value="other.downloadDir"></n-switch>
+          </n-form-item>
+          <n-form-item>
+            <n-button type="primary" @click="otherSubmit">保存</n-button>
+          </n-form-item>
+        </n-form>
+      </n-collapse-item>
       <n-collapse-item title="关于" name="2">
         <n-space>
           <a href="https://mypikpak.com/" target="_blank" class="n-button">官方网站</a>
@@ -171,6 +187,19 @@ const proxyReset = () => {
   window.localStorage.removeItem('isSettingProxy')
   proxyData.value = proxyDefault.join('\n')
 }
+const other = ref({
+  myyunToken: "",
+  btCometUrl: "",
+  downloadDir: ""
+})
+const otherSubmit = () => {
+  const {myyunToken, btCometUrl, downloadDir} = other.value
+  myyunToken && window.localStorage.setItem('myyun_token', myyunToken)
+  btCometUrl && window.localStorage.setItem('bitcomet_url', btCometUrl)
+  downloadDir && window.localStorage.setItem('download_dir', downloadDir)
+  window.$message.success('保存成功')
+}
+
 onMounted(() => {
   let aria2 = JSON.parse(window.localStorage.getItem('pikpakAria2') || '{}')
   if(aria2.dir === undefined) {
@@ -187,6 +216,14 @@ onMounted(() => {
   let proxy = JSON.parse(window.localStorage.getItem('proxy') || '[]')
   if(proxy.length) {
     proxyData.value = proxy.join('\n')
+  }
+  const myyunToken = window.localStorage.getItem('myyun_token') || ''
+  const btCometUrl = window.localStorage.getItem('bitcomet_url') || ''
+  const downloadDir = window.localStorage.getItem('download_dir') || ''
+  other.value = {
+    myyunToken,
+    btCometUrl,
+    downloadDir
   }
 })
 const telegramUrl = ref()
