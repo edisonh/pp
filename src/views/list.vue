@@ -1152,6 +1152,7 @@ const handlePikFile = async (file: any) => {
 
     const downloadByBitComet = (items: any) => {
       const bcUrl = window.localStorage.getItem('bitcomet_url') || null
+      const bcAuth = window.localStorage.getItem('bitcomet_auth') || ''
       const downloadDir = window.localStorage.getItem('download_dir') || null
       if (!bcUrl || !downloadDir) {
         window.$message.error('请先设置BitComet的下载地址、downloadDir')
@@ -1175,7 +1176,8 @@ const handlePikFile = async (file: any) => {
           method: 'POST',
           mode: 'no-cors',
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Basic ${btoa(bcAuth)}`
           },
           body: Object.keys(bcOpts).map((key:string) => key + '=' + encodeURIComponent(bcOpts[key])).join('&')
         })

@@ -190,12 +190,14 @@ const proxyReset = () => {
 const other = ref({
   myyunToken: "",
   btCometUrl: "",
+  btCometAuth: "",
   downloadDir: ""
 })
 const otherSubmit = () => {
-  const {myyunToken, btCometUrl, downloadDir} = other.value
+  const {myyunToken, btCometUrl, btCometAuth, downloadDir} = other.value
   myyunToken && window.localStorage.setItem('myyun_token', myyunToken)
   btCometUrl && window.localStorage.setItem('bitcomet_url', btCometUrl)
+  btCometAuth && window.localStorage.setItem('bitcomet_auth', btCometAuth)
   downloadDir && window.localStorage.setItem('download_dir', downloadDir)
   window.$message.success('保存成功')
 }
@@ -220,9 +222,11 @@ onMounted(() => {
   const myyunToken = window.localStorage.getItem('myyun_token') || ''
   const btCometUrl = window.localStorage.getItem('bitcomet_url') || ''
   const downloadDir = window.localStorage.getItem('download_dir') || ''
+  const btCometAuth = window.localStorage.getItem('bitcomet_auth') || ''
   other.value = {
     myyunToken,
     btCometUrl,
+    btCometAuth,
     downloadDir
   }
 })
