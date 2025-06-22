@@ -64,13 +64,13 @@
       <n-collapse-item name="ext" title="其他设置">
         <n-form label-width="100px" label-align="left" label-placement="left">
           <n-form-item label="myyun token">
-            <n-switch v-model:value="other.myyunToken"></n-switch>
+            <n-input v-model:value="other.myyunToken" placeholder="token"></n-input>
           </n-form-item>
           <n-form-item label="btComet url">
-            <n-switch v-model:value="other.btCometUrl"></n-switch>
+            <n-input v-model:value="other.btCometUrl" placeholder="btCometUrl"></n-input>
           </n-form-item>
           <n-form-item label="下载目录">
-            <n-switch v-model:value="other.downloadDir"></n-switch>
+            <n-input v-model:value="other.downloadDir" placeholder="downloadDir"></n-input>
           </n-form-item>
           <n-form-item>
             <n-button type="primary" @click="otherSubmit">保存</n-button>
