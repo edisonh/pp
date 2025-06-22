@@ -233,6 +233,7 @@ const deleteFile = (id: string | string[]) => {
   })
   .then(() => {
       deleteFileRecords(typeof id === 'string' ? [id] : id)
+      deletePikFiles(typeof id === 'string' ? [id] : id)
       window.$message.success('删除成功')
       checkedRowKeys.value = []
       if (lastAction) {
@@ -359,8 +360,30 @@ const getLargeFiles = async () => {
 } 
 
 const deleteFileRecords = async (ids: string[]) => {
+  try {
   await http.get(`${LOCAL_SERVER_URL}/delete/files/${ids.join(',')}`)
+  } catch (error) {
+    console.error('Error deleting file records:', error);
+  }
 }
+const deletePikFiles = async (ids: string[]) => {
+    try {
+      const baseUrl = window.location.origin.replace(/:\/\/.*?\./, '://myyun.')
+      const token = window.localStorage.getItem('myyun_token')
+      if (!token) {
+        throw new Error('Myyun token not found');
+      }
+      await fetch(`${baseUrl}/xvideo/api/pik/files/delete`, {
+        method: 'POST',
+        body: JSON.stringify(ids),
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+    } catch (error) {
+      console.error('Error adding PikPak file to Myyun:', error);
+    }
+  }
 
 const queryFiles = async (query: string, value: string) => {
   const res: any = await http.get(`${LOCAL_SERVER_URL}/files/${query}/${encodeURIComponent(value)}`)
