@@ -75,6 +75,9 @@
           <n-form-item label="下载目录">
             <n-input v-model:value="other.downloadDir" placeholder="downloadDir"></n-input>
           </n-form-item>
+          <n-form-item label="chrome扩展ID">
+            <n-input v-model:value="other.chromeExtensionId" placeholder="chromeExtensionId"></n-input>
+          </n-form-item>
           <n-form-item>
             <n-button type="primary" @click="otherSubmit">保存</n-button>
           </n-form-item>
@@ -194,14 +197,16 @@ const other = ref({
   myyunToken: "",
   btCometUrl: "",
   btCometAuth: "",
-  downloadDir: ""
+  downloadDir: "",
+  chromeExtensionId: ""
 })
 const otherSubmit = () => {
-  const {myyunToken, btCometUrl, btCometAuth, downloadDir} = other.value
+  const {myyunToken, btCometUrl, btCometAuth, downloadDir, chromeExtensionId} = other.value
   myyunToken && window.localStorage.setItem('myyun_token', myyunToken)
   btCometUrl && window.localStorage.setItem('bitcomet_url', btCometUrl)
   btCometAuth && window.localStorage.setItem('bitcomet_auth', btCometAuth)
   downloadDir && window.localStorage.setItem('download_dir', downloadDir)
+  chromeExtensionId && window.localStorage.setItem('chrome_extension_id', chromeExtensionId)
   window.$message.success('保存成功')
 }
 
@@ -226,11 +231,13 @@ onMounted(() => {
   const btCometUrl = window.localStorage.getItem('bitcomet_url') || ''
   const downloadDir = window.localStorage.getItem('download_dir') || ''
   const btCometAuth = window.localStorage.getItem('bitcomet_auth') || ''
+  const chromeExtensionId = window.localStorage.getItem('chrome_extension_id') || ''
   other.value = {
     myyunToken,
     btCometUrl,
     btCometAuth,
-    downloadDir
+    downloadDir,
+    chromeExtensionId
   }
 })
 const telegramUrl = ref()
