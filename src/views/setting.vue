@@ -69,6 +69,9 @@
           <n-form-item label="btComet url">
             <n-input v-model:value="other.btCometUrl" placeholder="btCometUrl"></n-input>
           </n-form-item>
+          <n-form-item label="btComet auth">
+            <n-input v-model:value="other.btCometAuth" type="password" show-password-on="mousedown" placeholder="btCometAuth"></n-input>
+          </n-form-item>
           <n-form-item label="下载目录">
             <n-input v-model:value="other.downloadDir" placeholder="downloadDir"></n-input>
           </n-form-item>
