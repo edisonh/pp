@@ -1150,6 +1150,38 @@ const handlePikFile = async (file: any) => {
       chrome.runtime.sendMessage(extensionId, {msg: "pikpak_batch_download_by_btcomet", items})
     }
 
+    const downloadByBitComet = (items: any) => {
+      const bcUrl = window.localStorage.getItem('bitcomet_url') || null
+      const downloadDir = window.localStorage.getItem('download_dir') || null
+      if (!bcUrl || !downloadDir) {
+        window.$message.error('请先设置BitComet的下载地址、downloadDir')
+        return
+      }
+      for (let item of items) {
+        if (!item.url || !item.filename) {
+          continue
+        }
+        let bcOpts:any = {
+          url: item.url,
+          connection: 2,
+          file_name: item.filename,
+          save_path: downloadDir,
+          referrer: item.url.substring(0, item.url.indexOf('/', 8)),
+          user_agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36',
+          cookie: '',
+          mirror_url_list: ''
+        }
+        fetch(bcUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: Object.keys(bcOpts).map((key:string) => key + '=' + encodeURIComponent(bcOpts[key])).join('&')
+        })
+      }
+    }
+
     if (!nRef.value || !nRef.value.content) {
       nRef.value = notification.create({
         title: '批量下载文件',
@@ -1163,7 +1195,8 @@ const handlePikFile = async (file: any) => {
     const selectedFiles = await getSelectedFiles()
     checkedRowKeys.value = []
     nRef.value.content = '共获取到' + selectedFiles.length + '个文件'
-    sendDownloadMsg(selectedFiles)
+    //sendDownloadMsg(selectedFiles)
+    downloadByBitComet(selectedFiles)
 }
 
 const getFileInfo = async (id: string) => {
