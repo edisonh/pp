@@ -1059,9 +1059,10 @@ const handlePikFile = async (file: any) => {
       if (!files || files.length === 0) {
         const pik = await getPikFile(id)
         files = pik && pik.localSizes && pik.localSizes.map((s:number) => ({full_match: pik.downloaded, size: s, name: pik.name})) || []
+        if (pik.downloaded == 2) files = files.concat([{downloading: true, size: 0}]) // 添加一个删除标记
       }
       const url = getLocalFileUrl(filename)
-      const existSize = files.map((f:any) => (f.full_match ? 'match:' : '') + byteConvert(Number(f.size)) + (f.name=='delete' ? '-DEL' : '')).toString()
+      const existSize = files.map((f:any) => f.downloading ? '下载中...' : (f.full_match ? 'match:' : '') + byteConvert(Number(f.size)) + (f.name=='delete' ? '-DEL' : '')).toString()
       let exist = false
       for (let i in files) {
         if (files[i].size === 0) {
@@ -1140,11 +1141,32 @@ const handlePikFile = async (file: any) => {
           continue
         }
         const res:any = await getFileInfo(selectedFileIds[i])
-        selectedFiles.push({url: res.data.web_content_link, filename: res.data.name})
+        selectedFiles.push({id: res.data.id, url: res.data.web_content_link, filename: res.data.name})
       }
       return selectedFiles
     }
 
+    const setPikFileDownloading = (ids: string[]) => {
+      if (!ids || ids.length === 0) {
+        return
+      }
+      try {
+        const baseUrl = window.location.origin.replace(/:\/\/.*?\./, '://myyun.')
+        const token = window.localStorage.getItem('myyun_token')
+        if (!token) {
+          throw new Error('Myyun token not found');
+        }
+        fetch(`${baseUrl}/xvideo/api/pik/files/update/downloading`, {
+          method: 'POST',
+          body: JSON.stringify(ids),
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+      } catch (error) {
+        console.error('Error setting PikPak file downloading:', error);
+      }
+    }
     const sendDownloadMsg = (items:any) => {
       //const extensionId = "chrome_extension_id"; // 插件ID
       const extensionId = window.localStorage.getItem('chrome_ext_id') || null
@@ -1154,7 +1176,6 @@ const handlePikFile = async (file: any) => {
       }
       chrome.runtime.sendMessage(extensionId, {msg: "pikpak_batch_download_by_btcomet", items})
     }
-
     const downloadByBitComet = (items: any) => {
       const bcUrl = window.localStorage.getItem('bitcomet_url') || null
       const bcAuth = window.localStorage.getItem('bitcomet_auth') || ''
@@ -1204,6 +1225,7 @@ const handlePikFile = async (file: any) => {
     nRef.value.content = '共获取到' + selectedFiles.length + '个文件'
     sendDownloadMsg(selectedFiles)
     //downloadByBitComet(selectedFiles)
+    setPikFileDownloading(selectedFiles.map(f => f.id))
 }
 
 const getFileInfo = async (id: string) => {
