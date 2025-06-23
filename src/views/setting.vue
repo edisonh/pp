@@ -21,10 +21,6 @@
           </n-form-item>
           <n-form-item label="文件夹设置：">
             <n-input v-model:value="aria2Data.dir"></n-input>
-            <!-- <n-switch v-model:value="aria2Data.dir" >
-              <template #checked>选择文件夹时保存文件夹结构</template>
-              <template #unchecked>选择文件夹时仅保存文件</template>
-            </n-switch> -->
           </n-form-item>
           <n-alert title="由于浏览器限制，请按下图设置开始混合模式" type="info"  v-if="aria2Data.host && aria2Data.host.indexOf('https://') === -1 && aria2Data.host.indexOf('http://localhost') == -1 && aria2Data.host.indexOf('http://127.0.0.1') === -1">
             <img src="../assets/aria2-tip-1.png" alt=""> 
