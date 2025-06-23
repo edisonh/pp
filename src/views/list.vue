@@ -1461,22 +1461,13 @@ const deleteAndMark = async (id:string, kind:string, name:string, size:number, b
     if(aria2Data.value.token) {
       postData.params.splice(0, 0, 'token:' + aria2Data.value.token)
     }
-    fetch(aria2Data.value.host, {
-        method: 'POST',
-        body: JSON.stringify(postData),
-        headers: new Headers({
-        'Content-Type': 'application/json'
-      })
-    })
-      .then(response => response.json())
-      .then(res => {
-        if(res.error && res.error.message) {
-          window.$message.error(res.error.message)
-        } else if(res.result) {
+    http.post(aria2Data.value.host, postData)
+      .then((res: any) => {
+        if(res.data) {
           window.$message.success('推送成功')
         }
       })
-      .catch(error => console.error('Error:', error))
+      .catch((error:any) => console.error('Error:', error))
   }
   const scrollHandle = (e:any) =>  {
     if(e.target.offsetHeight + e.target.scrollTop >= e.target.scrollHeight - 30) {
