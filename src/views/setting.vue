@@ -137,11 +137,8 @@ const testAria2 = () => {
   //     })
   // })
   http.post(aria2Data.value.host, postData)
-    .then((response:any) => response.json())
     .then((res:any) => {
-      if(res.error && res.error.message) {
-        window.$message.error(res.error.message)
-      } else if(res.result) {
+      if(res.data) {
         window.localStorage.setItem('pikpakAria2', JSON.stringify(aria2Data.value))
         window.$message.success('保存成功')
       }
