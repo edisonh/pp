@@ -128,15 +128,17 @@ const testAria2 = () => {
   if(aria2Data.value.token) {
     postData.params.splice(0, 0, 'token:' + aria2Data.value.token)
   }
-  fetch(aria2Data.value.host, {
-      method: 'POST',
-      body: JSON.stringify(postData),
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      })
-  })
-    .then(response => response.json())
-    .then(res => {
+  
+  // fetch(aria2Data.value.host, {
+  //     method: 'POST',
+  //     body: JSON.stringify(postData),
+  //     headers: new Headers({
+  //       'Content-Type': 'application/json'
+  //     })
+  // })
+  http.post(aria2Data.value.host, postData)
+    .then((response:any) => response.json())
+    .then((res:any) => {
       if(res.error && res.error.message) {
         window.$message.error(res.error.message)
       } else if(res.result) {
@@ -144,7 +146,7 @@ const testAria2 = () => {
         window.$message.success('保存成功')
       }
     })
-    .catch(error => console.error('Error:', error))
+    .catch((error:any) => console.error('Error:', error))
 }
 const loginSwitch = ref(false)
 const loginData = ref({
