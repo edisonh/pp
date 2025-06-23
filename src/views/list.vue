@@ -1454,6 +1454,7 @@ const deleteAndMark = async (id:string, kind:string, name:string, size:number, b
         params:[
             [url],
             {
+              referer: url.substring(0, url.indexOf('/', 8)),
               out: res.data.name
             }
         ]
