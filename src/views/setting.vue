@@ -19,15 +19,6 @@
           <n-form-item label="aria2Token：">
             <n-input v-model:value="aria2Data.token" type="password" show-password-on="mousedown"></n-input>
           </n-form-item>
-          <n-form-item label="文件夹设置：">
-            <n-input v-model:value="aria2Data.dir"></n-input>
-          </n-form-item>
-          <n-alert title="由于浏览器限制，请按下图设置开始混合模式" type="info"  v-if="aria2Data.host && aria2Data.host.indexOf('https://') === -1 && aria2Data.host.indexOf('http://localhost') == -1 && aria2Data.host.indexOf('http://127.0.0.1') === -1">
-            <img src="../assets/aria2-tip-1.png" alt=""> 
-            <br />
-            <br />
-            <img src="../assets/aria2-tip-2.png" alt="">
-          </n-alert>
           <n-form-item>
             <n-button type="primary" @click="testAria2">测试并保存</n-button>
           </n-form-item>
@@ -125,8 +116,7 @@ const logs = ref([
 ])
 const aria2Data = ref({
   host: '',
-  token: '',
-  dir: true
+  token: ''
 })
 const testAria2 = () => {
   let postData:any = {
@@ -142,8 +132,8 @@ const testAria2 = () => {
       method: 'POST',
       body: JSON.stringify(postData),
       headers: new Headers({
-      'Content-Type': 'application/json'
-    })
+        'Content-Type': 'application/json'
+      })
   })
     .then(response => response.json())
     .then(res => {
@@ -209,9 +199,6 @@ const otherSubmit = () => {
 
 onMounted(() => {
   let aria2 = JSON.parse(window.localStorage.getItem('pikpakAria2') || '{}')
-  if(aria2.dir === undefined) {
-    aria2.dir = true
-  }
   if(aria2.host) {
     aria2Data.value = aria2
   }

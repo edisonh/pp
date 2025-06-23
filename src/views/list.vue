@@ -704,9 +704,6 @@ const handlePikFile = async (file: any) => {
       columns.value[columns.value.length - 1].width = 300
     }
     let aria2 = JSON.parse(window.localStorage.getItem('pikpakAria2') || '{}')
-    if(aria2.dir === undefined) {
-      aria2.dir = true
-    }
     if(aria2.host) {
       aria2Data.value = aria2
     }
@@ -1364,9 +1361,6 @@ const deleteAndMark = async (id:string, kind:string, name:string, size:number, b
       return false
     }
     await getAllFile()
-    if(!aria2Dir.value && aria2Data.value.dir) {
-      await getAria2Dir()
-    }
     const postOne =  () => {
       getFile(downFileList.value[0].id)
         .then(async res => {
@@ -1463,9 +1457,6 @@ const deleteAndMark = async (id:string, kind:string, name:string, size:number, b
               out: res.data.name
             }
         ]
-    }
-    if(dir && aria2Dir.value) {
-      postData.params[1].dir = aria2Dir.value + '/' + dir
     }
     if(aria2Data.value.token) {
       postData.params.splice(0, 0, 'token:' + aria2Data.value.token)
