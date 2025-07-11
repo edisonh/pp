@@ -1098,6 +1098,7 @@ const handlePikFile = async (file: any) => {
         }
       } else if (filesList.value[i].kind === 'drive#folder' && filesList.value[i].children) {
         for (let j in filesList.value[i].children) {
+          handlePikFile(j)
           const info = await getExistInfo(filesList.value[i].children[j].id, filesList.value[i].children[j].name, Number(filesList.value[i].children[j].size))
           filesList.value[i].children[j].exist = info
           if (!info.exist) {
