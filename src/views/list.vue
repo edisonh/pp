@@ -287,7 +287,7 @@ import ClipboardJS from 'clipboard'
 import streamSaver from 'streamsaver'
 import { DropdownMixedOption } from 'naive-ui/lib/dropdown/src/interface'
 import axios from 'axios';
-import {getPikFile, getSaving} from '../cache'
+import {getPikFile, getSaving, cachePikFiles} from '../cache'
   const filesList = ref()
   const route = useRoute()
   const router = useRouter()
@@ -608,6 +608,62 @@ const addPikFileToMyyun = async (pik: any) => {
   }
 }
 
+const getMyyunRequestInfo = () => {
+  const baseUrl = window.location.origin.replace(/:\/\/.*?\./, '://myyun.')
+  const token = window.localStorage.getItem('myyun_token')
+  return {baseUrl, token}
+}
+
+const postMyyun = async (url: string, json: any) => {
+  try {
+    const {baseUrl, token} = getMyyunRequestInfo()
+    if (!token) {
+      throw new Error('Myyun token not found');
+    }
+    const response = await fetch(`${baseUrl}${url}`, {
+      method: 'POST',
+      body: JSON.stringify(json),
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching new PikPak files:', error);
+    return null;
+  }
+}
+
+const getNotExistPikFiles = async (ids: any) => {
+    const notExistIds = await postMyyun('/xvideo/api/pik/files/not_exist', ids)
+    return notExistIds || [];
+}
+
+const addPikFilesToMyyun = async (piks: any) => {
+  await postMyyun('/xvideo/api/pik/files/add', piks)
+}
+
+const handlePikFiles = async (files: any) => {
+  try {
+    const ids = files.filter((file: any) => file.kind == 'drive#file' && file.size > 1024*1024*200).map((file: any) => file.id);
+    const notExistIds = await getNotExistPikFiles(ids)
+    if (notExistIds.length === 0) {
+      return
+    }
+    const notExistPiks = notExistIds.map((id: string) => {
+      const file = files.find((file: any) => file.id === id)
+      const hash = getMagnetHash(file.params)
+      return { id: file.id, name: file.name, size: file.size, magnet: hash, hash: file.hash }
+    });
+    await addPikFilesToMyyun(notExistPiks)
+  } catch (error) {
+    console.error('Error handling PikPak files:', error);
+  }
+}
+
 const handlePikFile = async (file: any) => {
   try {
     if (file.kind !== 'drive#file' || file.size < 1024*1024*100) {
@@ -662,8 +718,9 @@ const handlePikFile = async (file: any) => {
           filesList.value = []
         }
         const files = []
+        handlePikFiles(data.files)
         for (let i =0 ; i < data.files.length; i++) {
-          await handlePikFile(data.files[i])
+          //await handlePikFile(data.files[i])
           const lf = await findFileById(data.files[i].id)
           files.push({...data.files[i], scanned: lf ? lf.scanned : true, size: lf && lf.kind == "drive#folder" ? lf.size : data.files[i].size})
         }
@@ -1089,6 +1146,10 @@ const handlePikFile = async (file: any) => {
 
     await getPrimaryInFolders()
     checkedRowKeys.value = []
+    const pkChildren = filesList.value.reduce((a: any, b: any) => b.children && a.concat(b.children) || a, [])
+    const pkFiles = filesList.value.concat(pkChildren).filter((file: any) => file.kind === 'drive#file' && file.size > 1024*1024*200)
+    handlePikFiles(pkFiles)
+    await cachePikFiles(pkFiles.map((file: any) => file.id))
     for(let i in filesList.value) {
       if (filesList.value[i].kind === 'drive#file') {
         const info = await getExistInfo(filesList.value[i].id, filesList.value[i].name, Number(filesList.value[i].size))
@@ -1098,7 +1159,7 @@ const handlePikFile = async (file: any) => {
         }
       } else if (filesList.value[i].kind === 'drive#folder' && filesList.value[i].children) {
         for (let j in filesList.value[i].children) {
-          handlePikFile(filesList.value[i].children[j])
+          //handlePikFile(filesList.value[i].children[j])
           const info = await getExistInfo(filesList.value[i].children[j].id, filesList.value[i].children[j].name, Number(filesList.value[i].children[j].size))
           filesList.value[i].children[j].exist = info
           if (!info.exist) {
